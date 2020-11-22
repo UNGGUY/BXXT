@@ -1,0 +1,113 @@
+{% load static %}
+
+<html>
+
+<head>
+    <title>BUSINESS</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:seagreen;">
+        <div class="container">
+            <a class="navbar-brand " href="#">
+                <h3>BXXT</h3>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">OVERVIEW <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">NEWS <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">ABOUT <span class="sr-only">(current)</span></a>
+                    </li>
+                </ul>
+                <h5 class="text-light">{{User.uname}}</h5>
+            </div>
+        </div>
+    </nav>
+
+    <div style="height: 5%;"></div>
+
+    <div class="container">
+        <h3>TRANSFER</h3>
+        <form>
+            <div class="form-group">
+                <label for="tr_hospital">HOSPITAL NAME</label>
+                <input type="text" class="form-control" id="tr_hospital">
+            </div>
+            <div class="form-group">
+                <label for="tr_department">DEPARTMENT NAME</label>
+                <input type="text" class="form-control" id="tr_department">
+            </div>
+            <div class="form-group">
+                <label for="tr_image">TRANRFER IMAGE</label>
+                <input type="file" class="form-control-file" id="tr_image">
+            </div>
+            <button type="button" id="tr_submit" class="btn btn-primary col-3" style="margin-top: 3%;">SUBMIT</button>
+        </form>
+    </div>
+
+    <div style="height: 5%;"></div>
+
+    <div class="container">
+        <h3>REGISTRATION</h3>
+        <form>
+            <div class="form-group">
+                <label for="re_hospital">HOSPITAL NAME</label>
+                <input type="text" class="form-control" id="re_hospital">
+            </div>
+            <div class="form-group">
+                <label for="re_department">DEPARTMENT NAME</label>
+                <input type="text" class="form-control" id="re_department">
+            </div>
+            <div class="form-group">
+                <label for="re_fee">REGISTRATION FEE</label>
+                <input type="text" class="form-control" id="re_fee">
+            </div>
+            <div class="form-group">
+                <label for="re_Img">REGISTRATION IMAGE</label>
+                <input type="file" class="form-control-file" id="re_Img">
+            </div>
+            <button type="button" id="re_submit" class="btn btn-primary col-3" style="margin-top: 3%;">SUBMIT</button>
+        </form>
+    </div>
+
+    <div style="height: 5%;"></div>
+
+    <div class="container">
+        <h3>INVOICE</h3>
+        <form>
+            <div class="form-group">
+                <label for="in_hospital">HOSPITAL NAME</label>
+                <input type="text" class="form-control" id="in_hospital">
+            </div>
+            <div class="form-group">
+                <label for="in_department">DEPARTMENT NAME</label>
+                <input type="text" class="form-control" id="in_department">
+            </div>
+            <div class="form-group">
+                <label for="in_fee">FEE</label>
+                <input type="text" class="form-control" id="in_fee">
+            </div>
+            <div class="form-group">
+                <label for="in_transferImg">INVOICE IMAGE</label>
+                <input type="file" class="form-control-file" id="in_transferImg">
+            </div>
+            <button type="button" id="in_submit" class="btn btn-primary col-3" style="margin-top: 3%;">SUBMIT</button>
+        </form>
+    </div>
+
+    <script src="{% static 'jquery/jquery-3.5.1.min.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+</body>
+
+</html>
