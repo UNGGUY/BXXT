@@ -15,13 +15,15 @@ class Manager(models.Model):
     pw = models.CharField(max_length=16)  # 账户密码pw
     mname = models.CharField(max_length=20)  # 用户姓名mname
     type = models.CharField('身份', max_length=20, choices=choice)  # 身份type
-    isDelete = models.NullBooleanField(default=False)  # 删除标识 默认default  或 true null
+    isDelete = models.BooleanField(default=False)  # 删除标识 默认default  或 true null
 
     def __str__(self):
         return self.mid
 
     class Meta:
         db_table = "manager"
+        verbose_name = '审核管理员'
+        verbose_name_plural = '审核管理员'
 
 
 class UserType(models.Model):
@@ -34,6 +36,8 @@ class UserType(models.Model):
 
     class Meta:
         db_table = "usertype"
+        verbose_name = '用户类型'
+        verbose_name_plural = '用户类型'
 
 
 class User(models.Model):
@@ -62,7 +66,7 @@ class User(models.Model):
     # 省份
     address = models.CharField('省份', max_length=20, default="北京")
 
-    isDelete = models.NullBooleanField('三元态', default=False)
+    isDelete = models.BooleanField('三元态', default=False)
 
     def __str__(self):
         return self.uname
@@ -88,7 +92,7 @@ class Apply(models.Model):
     uid = models.ForeignKey(User, on_delete=models.PROTECT)
     # 申请的状态
     astatus = models.CharField("申请状态", max_length=20, choices=choice, default='未提交')
-    isDelete = models.NullBooleanField(default=False)  # 删除标识 默认default  或 true null
+    isDelete = models.BooleanField(default=False)  # 删除标识 默认default  或 true null
 
     def __str__(self):
         return self.aid
@@ -112,19 +116,23 @@ class Record(models.Model):
 
     class Meta:
         db_table = "record"
+        verbose_name = '报销记录'
+        verbose_name_plural = '报销记录'
 
 
 class Section(models.Model):
     stype = models.CharField(max_length=20)  # 科室类型
     sid = models.CharField(max_length=20)  # 科室编号
     # 删除标记，true 删除 false 未删除 null
-    isDelete = models.NullBooleanField()
+    isDelete = models.BooleanField()
 
     def __str__(self):
         return self.stype
 
     class Meta:
         db_table = "section"
+        verbose_name = '科室'
+        verbose_name_plural = '科室'
 
 
 class Detail(models.Model):
@@ -156,6 +164,8 @@ class Detail(models.Model):
 
     class Meta:
         db_table = "detail"
+        verbose_name = '凭证表'
+        verbose_name_plural = '凭证表'
 
 
 class Hospital(models.Model):
@@ -164,13 +174,15 @@ class Hospital(models.Model):
     #  医院名称
     hname = models.CharField(max_length=100)
     #  删除标记，true 删除 false 未删除 null
-    isDelete = models.NullBooleanField()
+    isDelete = models.BooleanField()
 
     def __str__(self):
         return self.hname
 
     class Meta:
         db_table = "hospital"
+        verbose_name = '医院'
+        verbose_name_plural = '医院'
 
 
 class Ratio(models.Model):
@@ -180,6 +192,8 @@ class Ratio(models.Model):
 
     class Meta:
         db_table = "ratio"
+        verbose_name = '报销比例'
+        verbose_name_plural = '报销比例'
 
 
 class Audit(models.Model):
@@ -198,6 +212,8 @@ class Audit(models.Model):
 
     class Meta:
         db_table = "audit"
+        verbose_name = '审核人员'
+        verbose_name_plural = '审核人员'
 
 
 

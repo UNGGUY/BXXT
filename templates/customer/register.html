@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+{% extends 'base.html' %}
+
+{% block title %}注册{% endblock %}
+{% block content %}
+
+
+
+    <div class="container" style="width: 100%">
+        <div class="col-md-4 col-md-offset-4" >
+            <form class="form-register" action="/bxxt/customer/register/" method="post">
+                {% if messgae %}
+                    <div class="alert alert-warning">{{ message }}</div>
+                {% endif %}
+
+                {% csrf_token %}
+
+                <h2 class="text-center" style="color: #ffc107">Welcome to register!!</h2>
+                <div class="form-group">
+                    {{ register_form.username.label_tag }}
+                    {{ register_form.username }}
+                </div>
+
+                <div class="form-group">
+                    {{ register_form.password1.label_tag }}
+                    {{ register_form.password1 }}
+                </div>
+
+                <div class="form-group">
+                    {{ register_form.password2.label_tag }}
+                    {{ register_form.password2 }}
+                </div>
+
+                <div class="form-group">
+                    {{ register_form.email.label_tag }}
+                    {{ register_form.email }}
+                </div>
+
+                <div class="form-group">
+                    {{ register_form.sex.label_tag }}
+                    {{ register_form.sex }}
+                </div>
+
+
+                <div align="center">
+                    <button type="reset"  class="btn btn-default pull-left">RESET</button>
+                    <button type="submit" class="btn btn-primary pull-right">SUBMIT</button>
+                </div>
+            </form>
+        </div>
+    </div> <!-- /container -->
+{% endblock %}
+
+</body>
+</html>
