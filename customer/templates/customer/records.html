@@ -51,12 +51,12 @@
             <tbody>
                 {% for record in latest_record_list %}
                 <tr>
-                    <th scope="row">{{record.id}}</th>
+                    <th scope="row">{{forloop.counter}}</th>
                     <th>{{record.rid}}</th>
                     <td>{{record.rtime}}</td>
                     <td>{{record.money}}</td>
                     <td>{{record.msg}}</td>
-                    <td><a href="http://127.0.0.1:8000/bxxt/customer/details/{{record.id}}">Records</a></td>
+                    <td><a href="http://127.0.0.1:8000/bxxt/customer/details/{{record.id}}">Details</a></td>
                 </tr>
                 {% endfor %}
             </tbody>

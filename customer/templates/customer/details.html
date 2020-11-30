@@ -46,23 +46,21 @@
                     <th scope="col">DATE TIME</th>
                     <th scope="col">TYPE</th>
                     <th scope="col">MONEY</th>
+                    <th scope="col">STATUS</th>
                     <th scope="col">OPERATION</th>
                 </tr>
             </thead>
             <tbody>
                 {% for detail in latest_detail_list %}
                 <tr>
-                    <th scope="row">{{detail.id}}</th>
+                    <th scope="row">{{forloop.counter}}</th>
                     <td>{{detail.did}}</td>
                     <td>{{detail.dtime}}</td>
                     <td>{{detail.type}}</td>
                     <td>{{detail.money}}</td>
+                    <td>{{detail.get_dstatus_display}}</td>
                     <td>
-                        {% if detail.dstatus %}
-                            <a href="http://127.0.0.1:8000/bxxt/customer/confirm">Confirm</a>
-                        {% else %}
-                            <a href="http://127.0.0.1:8000/bxxt/customer/detail/{{detail.id}}">Detail</a>
-                        {% endif %}
+                        <a href="http://127.0.0.1:8000/bxxt/customer/detail/{{detail.id}}">Detail</a>
                     </td>
                 </tr>
                 {% endfor %}

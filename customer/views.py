@@ -89,7 +89,7 @@ def detail(request,detail_id):
     docstring
     """
     user=User(uid='arstdhneio',uname='UNGGOY',tel='18201529287',money=1000,age=24,address='beijing')
-    Detail(id=1,did='xxxx',hname='evilhospital',dstatus=0,dtime=datetime.datetime.now(),money=1000,type=0)
+    detail=Detail(id=1,did='xxxx',hname='evilhospital',dstatus=0,dtime=datetime.datetime.now(),money=1000,type=0)
 
     return render(request,'customer/detail.html',{'detail':detail,'User':user})
 
