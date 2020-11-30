@@ -63,8 +63,10 @@ def account(request):
     """
     docstring
     """
+    user=User(uid='arstdhneio',uname='UNGGOY',tel='18201529287',money=1000,age=24,address='beijing')
+    context={'User':user}
+    return render(request,'customer/account.html',context)
 
-    return render(request, 'customer/account.html')
 
 
 
@@ -120,9 +122,7 @@ def logout(request):
 
     return redirect('/bxxt/customer/')
 
-    user=User(uid='arstdhneio',uname='UNGGOY',tel='18201529287',money=1000,age=24,address='beijing')
-    context={'User':user}
-    return render(request,'customer/account.html',context)
+
 
 
 def business(request):

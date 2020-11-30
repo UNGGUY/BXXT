@@ -15,16 +15,17 @@
 
 {% block content %}
     <div class="container" style="max-width: 80%;">
-        <ul class="list-group list-group-flush">                            
-            <li class="list-group-item list-group-item-primary">{{ detail.did }}</li>
-            <li class="list-group-item"></li>
-            <li class="list-group-item">Morbi leo risus</li>
-            <li class="list-group-item">Porta ac consectetur ac</li>
-            <li class="list-group-item">Vestibulum at eros</li>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item list-group-item-primary">{{ detail.get_type_display }}</li>
+            <li class="list-group-item">{{detail.dtime}}</li>
+            <li class="list-group-item">{{detail.hname}}</li>
+            <li class="list-group-item">{{detail.sid}}</li>
+            <li class="list-group-item">{{detail.get_dstatus_display}}</li>
         </ul>
+        <div class="text-center">
+            <img src="{% static 'wallhaven-zmkkly .jpg' %}" class="img-fluid" alt="detail image">
+        </div>
     </div>
-
-
 
 
 
