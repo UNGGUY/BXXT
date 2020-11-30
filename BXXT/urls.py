@@ -15,8 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+import xadmin
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('bxxt/customer/',include('customer.urls'))
+    # path('admin/', admin.site.urls),
+    path('xadmin/', xadmin.site.urls),
+    path('bxxt/customer/', include('customer.urls'))
 ]

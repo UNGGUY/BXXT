@@ -1,0 +1,123 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>{% block title %}base{% endblock %}</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  {% block css %}{% endblock %}
+  </head>
+
+
+
+  <body>
+
+
+{##}
+{#<nav class="navbar navbar-default" >#}
+{#  <div class="container-fluid">#}
+{#    <!-- Brand and toggle get grouped for better mobile display -->#}
+{#    <div class="navbar-header">#}
+{#      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"#}
+{#              data-target="#bs-example-navbar-collapse-1" aria-expanded="false">#}
+{#        <span class="sr-only">切换导航条</span>#}
+{#        <span class="icon-bar"></span>#}
+{#        <span class="icon-bar"></span>#}
+{#        <span class="icon-bar"></span>#}
+{#      </button>#}
+{#        <b>#}
+{#            <a class="navbar-brand" href="#">公费医疗报销系统</a>#}
+{#        </b>#}
+{##}
+{#    </div>#}
+{##}
+{#    <!-- Collect the nav links, forms, and other content for toggling -->#}
+{#    <div class="collapse navbar-collapse" id="my-nav">#}
+{#        <ul class="nav navbar-nav">#}
+{#            <li class="active"><a href="/bxxt/customer">主页</a> </li>#}
+{#        </ul>#}
+{#        <ul class="nav navbar-nav navbar-right">#}
+{#            {% if requset.session.is_login %}#}
+{#                <li><a href="#">当前在线：{{ request.session.user_name }}</a> </li>#}
+{#                <li><a href="/bxxt/customer/logout/">登出</a> </li>#}
+{#            {% else %}#}
+{#                <li><a href="/bxxt/customer/login/">登录</a> </li>#}
+{#                <li><a href="/bxxt/customer/register/">注册</a> </li>#}
+{#            {% endif %}#}
+{#        </ul>#}
+{#    </div>#}
+{##}
+{#  </div><!-- /.container-fluid -->#}
+{#</nav>#}
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:seagreen;">
+        <div class="container">
+            <a class="navbar-brand " href="/bxxt/customer/">
+                <h3>BXXT</h3>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+
+                     {% if request.session.is_login %}
+                        <li class="nav-item active">
+                        <a class="nav-link" href="/bxxt/customer/account">ACCOUNT <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/bxxt/customer/business">BUSINESS <span class="sr-only">(current)</span></a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item active">
+                        <a class="nav-link" href="/bxxt/customer/">ABOUT <span class="sr-only">(current)</span></a>
+                         </li>
+                    {% endif %}
+
+
+                </ul>
+{#                <a class="nav-link text-light" href="login">Sign in</a>#}
+                <ul class="nav navbar-nav navbar-right">
+                   {% if request.session.is_login %}
+                        <li><a class="nav-link text-light" href="/bxxt/customer/applys/">Online：{{ request.session.user_name }}</a> </li>
+                        <li><a class="nav-link text-light" href="/bxxt/customer/logout/">Log out</a> </li>
+                    {% else %}
+                        <li><a class="nav-link text-light" href="/bxxt/customer/login/">Sign in</a> </li>
+                        <li><a class="nav-link text-light" href="/bxxt/customer/register/">Sign up</a> </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+
+
+{% block content %}{% endblock %}
+
+
+{#    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->#}
+{#    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>#}
+{##}
+{#     <!-- Include all compiled plugins (below), or include individual files as needed -->#}
+{#    <script src="{% static 'bootstrap-3.3.7-dist/js/bootstrap.min.js' %}"></script>#}
+
+    <script src="{% static 'jquery/jquery-3.5.1.min.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+
+  </body>
+</html>
