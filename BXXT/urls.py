@@ -20,5 +20,5 @@ import xadmin
 urlpatterns = [
     # path('admin/', admin.site.urls),
     path('xadmin/', xadmin.site.urls),
-    path('bxxt/', include('customer.urls'))
+    path('bxxt/customer/', include('customer.urls'))
 ]
