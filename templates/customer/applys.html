@@ -25,7 +25,7 @@
             <tbody>
                 {% for apply in latest_apply_list %}
                 <tr>
-                    <th scope="row">{{apply.id}}</th>
+                    <th scope="row">{{forloop.counter}}</th>
                     <td>{{apply.aid}}</td>
                     <td>
                         {% if apply.astatus == 0 %}
