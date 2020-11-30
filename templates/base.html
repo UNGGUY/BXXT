@@ -87,7 +87,7 @@
 {#                <a class="nav-link text-light" href="login">Sign in</a>#}
                 <ul class="nav navbar-nav navbar-right">
                    {% if request.session.is_login %}
-                        <li><a class="nav-link text-light" href="#">online：{{ request.session.user_name }}</a> </li>
+                        <li><a class="nav-link text-light" href="/bxxt/customer/account/">online：{{ request.session.user_name }}</a> </li>
                         <li><a class="nav-link text-light" href="/bxxt/customer/logout/">Log out</a> </li>
                     {% else %}
                         <li><a class="nav-link text-light" href="/bxxt/customer/login/">Sign in</a> </li>

@@ -1,41 +1,16 @@
+{% extends 'base.html' %}
 {% load static %}
 
-<!DOCTYPE html>
-<html>
 
-<head>
-    <title>SEARCH</title>
+
+{% block title %}SEARCH{% endblock %}
+{% block css %}
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
-</head>
+{% endblock %}
 
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:seagreen;">
-        <div class="container" style="max-width: 80%;">
-            <a class="navbar-brand " href="#">
-                <h3>BXXT</h3>
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
 
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="#">OVERVIEW <span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="#">NEWS <span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="#">ABOUT <span class="sr-only">(current)</span></a>
-                    </li>
-                </ul>
-                <h5 class="text-light">{{User.uname}}</h5>
-            </div>
-        </div>
-    </nav>
 
+{% block content %}
     {% if latest_detail_list %}
     <div class="container" style="max-width: 80%;">
         <table class="table">
@@ -74,7 +49,6 @@
     </div>
     <script src="{% static 'jquery/jquery-3.5.1.min.js' %}"></script>
     <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
-</body>
 
 
-</html>
+{% endblock %}
