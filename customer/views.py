@@ -1,7 +1,7 @@
 
 import hashlib
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_list_or_404
 
 from django.shortcuts import render,get_object_or_404
 from customer.models import User,Detail,Apply,Record
@@ -58,14 +58,20 @@ def login(request):
     print(4)
     return render(request, 'customer/login.html', locals())
 
-#个人账户模块
+#从数据库获取个人账户信息
 def account(request):
     """
     docstring
     """
-    user=User(uid='arstdhneio',uname='UNGGOY',tel='18201529287',money=1000,age=24,address='beijing')
+    uid = request.session["user_id"]
+    user = models.User.objects.get(uid=uid)
+    #user=User(uid='arstdhneio',uname='UNGGOY',tel='18201529287',money=1000,age=24,address='beijing')
     context={'User':user}
     return render(request,'customer/account.html',context)
+
+
+
+
 
 
 
@@ -133,66 +139,120 @@ def business(request):
     context={'User':user}
     return render(request,'customer/business.html',context)
 
-
+#从数据库获取applys
 def applys(request):
     """
     docstring
     """
-    user=User(uid='arstdhneio',uname='UNGGOY',tel='18201529287',money=1000,age=24,address='beijing')
-    latest_apply_list=[
-        Apply(id=1,aid='xxxx',astatus=0),
-        Apply(id=2,aid='xxxx',astatus=1),
-        Apply(id=3,aid='xxxx',astatus=2),
-        Apply(id=4,aid='xxxx',astatus=3),
-        Apply(id=5,aid='xxxx',astatus=4),
-    ]
+    uid = request.session["user_id"]
+    user = models.User.objects.get(uid=uid)
+    id = user.id
+    #latest_apply_list = models.Apply.objects.all()
+    latest_apply_list= models.Apply.objects.filter(uid = id)
+    #latest_apply_list= get_list_or_404(Apply, uid_id= uid)
+
+
     context={'User':user,'latest_apply_list':latest_apply_list}
     return render(request,'customer/applys.html',context)
 
-def records(request,apply_id):
-    """
-    docstring
-    """
-    user=User(uid='arstdhneio',uname='UNGGOY',tel='18201529287',money=1000,age=24,address='beijing')
-    latest_record_list=[
-        Record(id=1,rid='xxxx',rtime=datetime.datetime.now(),msg='hello',money=100),
-        Record(id=2,rid='xxxx',rtime=datetime.datetime.now(),msg='world',money=100),
-        Record(id=3,rid='xxxx',rtime=datetime.datetime.now(),msg='Django',money=100),
-        Record(id=4,rid='xxxx',rtime=datetime.datetime.now(),msg='what',money=100),
-        Record(id=5,rid='xxxx',rtime=datetime.datetime.now(),msg='fuck',money=100),
-    ]
-    context={'User':user,'latest_record_list':latest_record_list}
+# def applys(request):
+#     """
+#     docstring
+#     """
+#     user=User(uid='arstdhneio',uname='UNGGOY',tel='18201529287',money=1000,age=24,address='beijing')
+#     # latest_apply_list=[
+#     #     Apply(id=1,aid='xxxx',astatus=0),
+#     #     Apply(id=2,aid='xxxx',astatus=1),
+#     #     Apply(id=3,aid='xxxx',astatus=2),
+#     #     Apply(id=4,aid='xxxx',astatus=3),
+#     #     Apply(id=5,aid='xxxx',astatus=4),
+#     # ]
+#     context={'User':user,'latest_apply_list':latest_apply_list}
+#     return render(request,'customer/applys.html',context)
+
+#从数据库获取records
+def records(request, apply_id ):
+    uid = request.session["user_id"]
+    user = models.User.objects.get(uid=uid)
+    #uid = user.uid
+    latest_record_list = get_list_or_404(Record, aid=apply_id)
+
+
+    context = {'User': user, 'latest_record_list': latest_record_list}
 
     return render(request,'customer/records.html',context)
 
 
-def details(request,record_id):
-    """
-    docstring
-    """
+# def records(request,apply_id):
+#     """
+#     docstring
+#     """
+#     user=User(uid='arstdhneio',uname='UNGGOY',tel='18201529287',money=1000,age=24,address='beijing')
+#     latest_record_list=[
+#         Record(id=1,rid='xxxx',rtime=datetime.datetime.now(),msg='hello',money=100),
+#         Record(id=2,rid='xxxx',rtime=datetime.datetime.now(),msg='world',money=100),
+#         Record(id=3,rid='xxxx',rtime=datetime.datetime.now(),msg='Django',money=100),
+#         Record(id=4,rid='xxxx',rtime=datetime.datetime.now(),msg='what',money=100),
+#         Record(id=5,rid='xxxx',rtime=datetime.datetime.now(),msg='fuck',money=100),
+#     ]
+#     context={'User':user,'latest_record_list':latest_record_list}
+#
+#     return render(request,'customer/records.html',context)
 
-    user=User(uid='arstdhneio',uname='UNGGOY',tel='18201529287',money=1000,age=24,address='beijing')
-    latest_detail_list=[
-        Detail(id=1,did='xxxx',hname='evilhospital',dstatus=0,dtime=datetime.datetime.now(),money=1000,type=0),
-        Detail(id=2,did='xxxx',hname='evilhospital',dstatus=1,dtime=datetime.datetime.now(),money=1000,type=0),
-        Detail(id=3,did='xxxx',hname='evilhospital',dstatus=1,dtime=datetime.datetime.now(),money=1000,type=0),
-        Detail(id=4,did='xxxx',hname='evilhospital',dstatus=0,dtime=datetime.datetime.now(),money=1000,type=0),
-    ]
-    
-    context={'latest_detail_list':latest_detail_list,
-        'User':user
-    }
+
+
+
+def details(request,record_id):
+    uid = request.session["user_id"]
+    user = models.User.objects.get(uid=uid)
+
+    latest_detail_list=get_list_or_404(Detail, rid=record_id)
+
+    context={'latest_detail_list':latest_detail_list,'User':user}
     return render(request,'customer/details.html',context)
 
 
+# def details(request,record_id):
+#     """
+#     docstring
+#     """
+#
+#     user=User(uid='arstdhneio',uname='UNGGOY',tel='18201529287',money=1000,age=24,address='beijing')
+#     latest_detail_list=[
+#         Detail(id=1,did='xxxx',hname='evilhospital',dstatus=0,dtime=datetime.datetime.now(),money=1000,type=0),
+#         Detail(id=2,did='xxxx',hname='evilhospital',dstatus=1,dtime=datetime.datetime.now(),money=1000,type=0),
+#         Detail(id=3,did='xxxx',hname='evilhospital',dstatus=1,dtime=datetime.datetime.now(),money=1000,type=0),
+#         Detail(id=4,did='xxxx',hname='evilhospital',dstatus=0,dtime=datetime.datetime.now(),money=1000,type=0),
+#     ]
+#
+#     context={'latest_detail_list':latest_detail_list,
+#         'User':user
+#     }
+#     return render(request,'customer/details.html',context)
+
+#从数据库获取detail
 def detail(request,detail_id):
     """
     docstring
     """
-    user=User(uid='arstdhneio',uname='UNGGOY',tel='18201529287',money=1000,age=24,address='beijing')
-    detail=Detail(id=1,did='xxxx',hname='evilhospital',dstatus=0,dtime=datetime.datetime.now(),money=1000,type=0)
+    uid = request.session["user_id"]
+    user = models.User.objects.get(uid=uid)
 
+
+
+    detail = get_object_or_404(Detail, pk=detail_id)
     return render(request,'customer/detail.html',{'detail':detail,'User':user})
+
+
+
+# def detail(request,detail_id):
+#     """
+#     docstring
+#     """
+#     user=User(uid='arstdhneio',uname='UNGGOY',tel='18201529287',money=1000,age=24,address='beijing')
+#     detail=Detail(id=1,did='xxxx',hname='evilhospital',dstatus=0,dtime=datetime.datetime.now(),money=1000,type=0)
+#
+#     return render(request,'customer/detail.html',{'detail':detail,'User':user})
 
     # 数据库直接用这个
     # detail = get_object_or_404(Detail, pk=detail_id)
