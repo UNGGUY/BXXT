@@ -47,13 +47,14 @@ class UserAdmin(object):
             Row('uid', 'password', 'isDelete'),
         ),
         Fieldset('个人信息',
-                 Row('uname', 'sex', ''),
-                 Row('age', 'tel', ''),
-                 Row('address', '', ''),
-                 Row('utype', '', ''),
-                 Row('money', '', ''),
+                 Row('uname', 'sex'),
+                 Row('age', 'tel'),
+                 Row('address'),
+                 Row('utype'),
+                 Row('money'),
                  )
     )
+    show_detail_fileds =False
     # 批量导入
     # 删除重写
     actions = [MyDelete]
@@ -98,10 +99,13 @@ class ManagerAdmin(object):
     list_editable = ['mname']
 
     def mid_detail(self, obj):
-        if Group.objects.get(user=self.request.user).name == 'manager':
-            return '<a href="%s">%s</a>' % ('/xadmin/customer/audit/?_rel_mid__id__exact=' + str(obj.id), obj.mid)
-        else:
+        if self.request.user.is_superuser:
             return '%s' % obj.mid
+        else:
+            if Group.objects.get(user=self.request.user).name == 'manager' :
+                return '<a href="%s">%s</a>' % ('/xadmin/customer/audit/?_rel_mid__id__exact=' + str(obj.id), obj.mid)
+            else:
+                return '%s' % obj.mid
     mid_detail.allow_tags = True
     mid_detail.short_description = '<div class="dropdown pull-left">' \
                                    '<a class="dropdown-toggle md-opjjpmhoiojifppkkcdabiobhakljdgm_doc" ' \
@@ -121,8 +125,8 @@ class ManagerAdmin(object):
                  Row('mid', 'pw', 'isDelete'),
                  ),
         Fieldset('个人信息',
-                 Row('mname', 'type', ''),
-                 Row('count', 'right', ''),
+                 Row('mname', 'type'),
+                 Row('count', 'right'),
                  )
     )
 
@@ -170,7 +174,7 @@ class UserTypeAdmin(object):
     show_bookmarks = False
 
     form_layout = (
-        Row('utype', '', ''),
+        Row('utype'),
         Row('limit', 'ratio', 'change')
     )
 
@@ -217,7 +221,7 @@ class RecordAdmin(object):
 
     form_layout = (
         Row('aid', 'rid'),
-        Row('money', 'money_bx', ''),
+        Row('money', 'money_bx'),
         Row('msg')
     )
 
@@ -246,7 +250,7 @@ class DetailAdmin(object):
         Row('rid', 'did'),
         Row('dtime', 'type'),
         Row('hname', 'sname'),
-        Row('money', 'money_bx', ''),
+        Row('money', 'money_bx'),
         Row('folder'),
         Row('msg'),
         Row('dstatus')
