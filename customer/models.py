@@ -33,17 +33,11 @@ class Manager(models.Model):
 class UserType(models.Model):
     utype = models.CharField('人员类型', max_length=20)
     limit = models.DecimalField('金额标准', max_digits=8, decimal_places=2)
+    ratio = models.IntegerField('报销比例/%', default=70)
     change = models.IntegerField('变化幅度/%', default=10)
 
     def __str__(self):
         return self.utype
-
-    def save(self):
-        models.Model.save(self, force_insert=False, force_update=False, using=None, update_fields=None)
-        section = Section.objects.all()
-        for obj in section:
-            ratio = Ratio.objects.create(utype=self, sid=obj, percent=70)
-            ratio.save()
 
     class Meta:
         db_table = "usertype"
@@ -109,43 +103,6 @@ class Hospital(models.Model):
         verbose_name_plural = verbose_name
 
 
-class Section(models.Model):
-    stype = models.CharField('科室', max_length=20)  # 科室类型
-    sid = models.CharField('科室编号', max_length=20)  # 科室编号
-    # 删除标记，true 删除 false 未删除 null
-    isDelete = models.BooleanField('是否删除', null=True, default=False)
-
-    def __str__(self):
-        return self.stype
-
-    def save(self):
-        models.Model.save(self, force_insert=False, force_update=False, using=None, update_fields=None)
-        usertype = UserType.objects.all()
-        for obj in usertype:
-            ratio = Ratio.objects.create(utype=obj, sid=self, percent=70)
-            ratio.save()
-
-    class Meta:
-        db_table = "section"
-        verbose_name = '科室'
-        verbose_name_plural = verbose_name
-
-
-class Ratio(models.Model):
-    utype = models.ForeignKey(UserType, on_delete=models.PROTECT, verbose_name=u"人员类型")
-    sid = models.ForeignKey(Section, on_delete=models.PROTECT, verbose_name=u"科室")
-    percent = models.IntegerField('报销比例', default=70)
-
-    class Meta:
-        db_table = "ratio"
-        verbose_name = '报销比例'
-        verbose_name_plural = verbose_name
-
-    def __str__(self):
-        return str(self.utype) + '-' + str(self.sid)
-
-
-# 申请记录表
 class Apply(models.Model):
     choice = (
         ('0', '未提交'),
@@ -178,6 +135,7 @@ class Record(models.Model):
     rid = models.CharField('记录编号', max_length=10)  # 编号rid
     rtime = models.DateField('修改时间', auto_now=True, auto_now_add=False)  # 最后修改时间rtime
     money = models.DecimalField('金额', max_digits=8, decimal_places=2, default=0.00)  # 金额money 6位.2位
+    money_bx = models.DecimalField('可报销金额', max_digits=8, decimal_places=2, default=0.00)  # 可报销金额money 6位.2位
     msg = models.CharField('备注', max_length=200, null=True,blank=True)  # 备注信息msg
 
     def __str__(self):
@@ -203,15 +161,16 @@ class Detail(models.Model):
     )
     type = models.CharField('类型', choices=choice, max_length=20)
     money = models.DecimalField('金额', max_digits=8, decimal_places=2, null=True, blank=True)  # 金额money 6位.2位
+    # 可报销金额money 6位.2位
+    money_bx = models.DecimalField('可报销金额', max_digits=8, decimal_places=2, default=0.00, null=True, blank=True)
     hname = models.CharField('医院', max_length=20, null=True, blank=True)  # 医院hname
-    sid = models.ForeignKey(Section, on_delete=models.PROTECT, null=True, blank=True, verbose_name=u"科室")  # 科室sid
+    sname = models.CharField('科室', max_length=20, null=True, blank=True)  # 科室sname
     status = (
         ('0', '验证'),
         ('1', '合格'),
         ('-1', '不合格')
     )
     dstatus = models.CharField('状态', choices=status, default='验证', max_length=20)  # 表单状态 默认false是合格
-    # folder = models.ImageField('图片', upload_to='images/'+ __str__())
 
     def __str__(self):
         return self.did

@@ -10,6 +10,7 @@
 
 
 {% block content %}
+<<<<<<< HEAD
 {% if latest_record_list %}
 <div class="container" style="max-width: 80%;">
     <table class="table">
@@ -39,6 +40,37 @@
 
     <div style="text-align:center;margin-top: 5%;">
         <a href="#" class="btn btn-primary col-2">ADD RECORD</a>
+=======
+    {% if latest_record_list %}
+    <div class="container" style="max-width: 80%;">
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">RECORD No.</th>
+                    <th scope="col">DATATIME</th>
+                    <th scope="col">MONEY</th>
+                    <th scope="col">MESSAGE</th>
+                    <th scope="col">OPERATION</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in latest_record_list %}
+                <tr>
+                    <th scope="row">{{record.id}}</th>
+                    <th>{{record.rid}}</th>
+                    <td>{{record.rtime}}</td>
+                    <td>{{record.money}}</td>
+                    <td>{{record.msg}}</td>
+                    <td><a href="/bxxt/customer/details/{{record.id}}">Details</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>NO RECORDS ARE AVAILABLE.</p>
+        {% endif %}
+>>>>>>> c0db779a9371f86bb7c67cf7702ba64b54c40666
     </div>
 
     {% else %}

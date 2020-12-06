@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.template.response import TemplateResponse
 from xadmin.util import model_ngettext
 
-from customer.models import Manager, Apply, Audit, Ratio, Hospital, Section, UserType, User, Record, Detail
+from customer.models import Manager, Apply, Audit, Hospital, UserType, User, Record, Detail
 from xadmin import views
 from xadmin.plugins.actions import BaseActionView
 from django.utils.translation import gettext_lazy as _
@@ -98,30 +98,10 @@ class HospitalAdmin(object):
         return False
 
 
-class SectionAdmin(object):
-    list_display = ['sid', 'stype', 'isDelete']
-    ordering = ['isDelete']
-    model_icon = 'fa fa-stethoscope'
-    search_fields = ['sid', 'sname']
-    # readonly_fields = "isDelete"
-    show_bookmarks = False
-    list_filter = ["isDelete"]
-    # 删除重写
-    actions = [MyDelete]
-
-    # 删除屏蔽
-    @staticmethod
-    def has_delete_permission(request=None):
-        # Disable add
-        return False
-
-    # 增加重写
-
-
 class UserTypeAdmin(object):
-    list_display = ['utype', 'limit', 'change']
+    list_display = ['utype', 'limit', 'ratio', 'change']
     model_icon = 'fa fa-user-md'
-    list_editable = ['limit', 'change']
+    list_editable = ['limit', 'ratio', 'change']
     show_bookmarks = False
 
     # 删除屏蔽
@@ -130,25 +110,6 @@ class UserTypeAdmin(object):
         # Disable add
         return False
     # 增加重写
-
-
-class RatioAdmin(object):
-    list_display = ['utype', 'sid', 'percent']
-    model_icon = 'fa fa-money'
-    list_editable = ['percent']
-    show_bookmarks = False
-
-    # 增加屏蔽
-    @staticmethod
-    def has_add_permission(request=None):
-        # Disable add
-        return False
-
-    # 删除屏蔽
-    @staticmethod
-    def has_delete_permission(request=None):
-        # Disable add
-        return False
 
 
 class ApplyAdmin(object):
@@ -177,9 +138,9 @@ class ApplyAdmin(object):
 
 
 class RecordAdmin(object):
-    list_display = ['aid', 'rid', 'rtime', 'money', 'msg']
+    list_display = ['aid', 'rid', 'rtime', 'money', 'money_bx', 'msg']
     model_icon = 'fa fa-tag'
-    list_editable = ['money']
+    list_editable = ['money_bx']
     # readonly_fields = ("isDelete", "aid", "rid", "rtime", "msg")
     search_fields = ['aid__aid', 'rid']
     show_bookmarks = False
@@ -197,12 +158,12 @@ class RecordAdmin(object):
 
 
 class DetailAdmin(object):
-    list_display = ['rid', 'did', 'dtime', 'type', 'money', 'hname', 'sid', 'dstatus', 'folder']
+    list_display = ['rid', 'did', 'dtime', 'type', 'money', 'money_bx', 'hname', 'sname', 'dstatus', 'folder']
     model_icon = 'fa fa-tags'
-    list_editable = ['money', "dstatus"]
+    list_editable = ['money_bx', "dstatus"]
     # readonly_fields = ('rid', 'did', 'dtime', 'type', 'hname', 'sid', 'folder')
-    search_fields = ['rid__rid', 'did', 'sid__sname']
-    list_filter = ['type', 'sid', 'dstatus']
+    search_fields = ['rid__rid', 'did', 'sname', 'hname']
+    list_filter = ['type', 'dstatus']
     show_bookmarks = False
 
     # @staticmethod
@@ -249,9 +210,9 @@ xadmin.site.register(views.CommAdminView, GlobalSetting)
 xadmin.site.register(User, UserAdmin)
 xadmin.site.register(Manager, ManagerAdmin)
 xadmin.site.register(Hospital, HospitalAdmin)
-xadmin.site.register(Section, SectionAdmin)
+# xadmin.site.register(Section, SectionAdmin)
 xadmin.site.register(UserType, UserTypeAdmin)
-xadmin.site.register(Ratio, RatioAdmin)
+# xadmin.site.register(Ratio, RatioAdmin)
 xadmin.site.register(Apply, ApplyAdmin)
 xadmin.site.register(Record, RecordAdmin)
 xadmin.site.register(Detail, DetailAdmin)
