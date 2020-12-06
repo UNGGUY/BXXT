@@ -135,6 +135,7 @@ class Record(models.Model):
     rid = models.CharField('记录编号', max_length=10)  # 编号rid
     rtime = models.DateField('修改时间', auto_now=True, auto_now_add=False)  # 最后修改时间rtime
     money = models.DecimalField('金额', max_digits=8, decimal_places=2, default=0.00)  # 金额money 6位.2位
+    money_bx = models.DecimalField('可报销金额', max_digits=8, decimal_places=2, default=0.00)  # 可报销金额money 6位.2位
     msg = models.CharField('备注', max_length=200, null=True,blank=True)  # 备注信息msg
 
     def __str__(self):
@@ -160,6 +161,8 @@ class Detail(models.Model):
     )
     type = models.CharField('类型', choices=choice, max_length=20)
     money = models.DecimalField('金额', max_digits=8, decimal_places=2, null=True, blank=True)  # 金额money 6位.2位
+    # 可报销金额money 6位.2位
+    money_bx = models.DecimalField('可报销金额', max_digits=8, decimal_places=2, default=0.00, null=True, blank=True)
     hname = models.CharField('医院', max_length=20, null=True, blank=True)  # 医院hname
     sname = models.CharField('科室', max_length=20, null=True, blank=True)  # 科室sname
     status = (

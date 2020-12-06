@@ -138,9 +138,9 @@ class ApplyAdmin(object):
 
 
 class RecordAdmin(object):
-    list_display = ['aid', 'rid', 'rtime', 'money', 'msg']
+    list_display = ['aid', 'rid', 'rtime', 'money', 'money_bx', 'msg']
     model_icon = 'fa fa-tag'
-    list_editable = ['money']
+    list_editable = ['money_bx']
     # readonly_fields = ("isDelete", "aid", "rid", "rtime", "msg")
     search_fields = ['aid__aid', 'rid']
     show_bookmarks = False
@@ -158,9 +158,9 @@ class RecordAdmin(object):
 
 
 class DetailAdmin(object):
-    list_display = ['rid', 'did', 'dtime', 'type', 'money', 'hname', 'sname', 'dstatus', 'folder']
+    list_display = ['rid', 'did', 'dtime', 'type', 'money', 'money_bx', 'hname', 'sname', 'dstatus', 'folder']
     model_icon = 'fa fa-tags'
-    list_editable = ['money', "dstatus"]
+    list_editable = ['money_bx', "dstatus"]
     # readonly_fields = ('rid', 'did', 'dtime', 'type', 'hname', 'sid', 'folder')
     search_fields = ['rid__rid', 'did', 'sname', 'hname']
     list_filter = ['type', 'dstatus']
