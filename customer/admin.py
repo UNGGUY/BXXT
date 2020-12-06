@@ -4,16 +4,19 @@ from django.contrib import admin
 from django.contrib import admin
 import xadmin
 from django.contrib.auth.models import Group
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 from django.template.response import TemplateResponse
 from xadmin.util import model_ngettext
-
+from import_export import resources
+from django.shortcuts import render, redirect
 from customer.models import Manager, Apply, Audit, Hospital, UserType, User, Record, Detail
 from xadmin import views
 from xadmin.plugins.actions import BaseActionView
 from django.utils.translation import gettext_lazy as _
 from django.db.models import Q
 from xadmin.layout import Fieldset, Row
+from customer.resources import *
 
 
 class MyDelete(BaseActionView):
@@ -54,7 +57,8 @@ class UserAdmin(object):
                  Row('money'),
                  )
     )
-    show_detail_fileds =False
+    list_export = ''
+    import_export_args = {'import_resource_class': UserResource, 'export_resource_class': UserResource}
     # 批量导入
     # 删除重写
     actions = [MyDelete]
@@ -131,8 +135,19 @@ class ManagerAdmin(object):
     )
 
     # 批量导入
+    list_export = ''
+    import_export_args = {'import_resource_class': ManagerResource, 'export_resource_class': ManagerResource}
     # 删除重写
     actions = [MyDelete]
+
+    def save_models(self):
+        obj = self.new_obj
+        qs = Group.objects.get(user=self.request.user)
+        if qs.name == "manager" and obj.type != '2':
+            # self.new_obj.type = None
+            obj.type = "2"
+            self.message_user('由于您只有创建审核人的权限，故自动将身份修改为审核人', 'warning')
+        obj.save()
 
     # 删除屏蔽
     @staticmethod
@@ -157,8 +172,12 @@ class HospitalAdmin(object):
     # readonly_fields = "isDelete"
     show_bookmarks = False
     list_filter = ["isDelete"]
+
     # 删除重写
     actions = [MyDelete]
+
+    list_export = ''
+    import_export_args = {'import_resource_class': HospitalResource, 'export_resource_class': HospitalResource}
 
     # 删除屏蔽
     @staticmethod
@@ -178,6 +197,9 @@ class UserTypeAdmin(object):
         Row('limit', 'ratio', 'change')
     )
 
+    list_export = ''
+    import_export_args = {'import_resource_class': UserTypeResource, 'export_resource_class': UserTypeResource}
+
     # 删除屏蔽
     @staticmethod
     def has_delete_permission(request=None):
@@ -196,6 +218,8 @@ class ApplyAdmin(object):
     list_filter = ['astatus', 'atime', "isDelete"]
     show_bookmarks = False
 
+    list_export = ''
+    import_export_args = {'import_resource_class': ApplyResource, 'export_resource_class': ApplyResource}
     # @staticmethod
     # def has_add_permission(request=None):
     #     # Disable add
@@ -224,6 +248,9 @@ class RecordAdmin(object):
         Row('money', 'money_bx'),
         Row('msg')
     )
+
+    list_export = ''
+    import_export_args = {'import_resource_class': RecordResource, 'export_resource_class': RecordResource}
 
     # @staticmethod
     # def has_add_permission (request=None):
@@ -256,6 +283,8 @@ class DetailAdmin(object):
         Row('dstatus')
     )
 
+    list_export = ''
+    import_export_args = {'import_resource_class': DetailResource, 'export_resource_class': DetailResource}
     # @staticmethod
     # def has_add_permission(request=None):
     #     # Disable add
@@ -279,18 +308,13 @@ class AuditAdmin(object):
         return '<a href="%s">%s</a>' % ('/xadmin/customer/apply/?_q_=' + str(obj.aid), obj.aid)
 
     aid_detail.allow_tags = True
-    str = "<div class='dropdown pull-left'>" \
-          "<a class='dropdown-toggle md-opjjpmhoiojifppkkcdabiobhakljdgm_doc' data-toggle='dropdown' href='#'>" \
-          "申请编号</a>" \
-          "<ul class='dropdown-menu' role='menu'>" \
-          "<li><a href='?_q_=&amp;o=aid' class='active md-opjjpmhoiojifppkkcdabiobhakljdgm_doc'>" \
-          "<i class='fa fa-caret-up'></i> 正序</a></li>" \
-          "<li><a href='?_q_=&amp;o=-aid' class='active md-opjjpmhoiojifppkkcdabiobhakljdgm_doc'>" \
-          "<i class='fa fa-caret-down'></i> 倒序</a></li>" \
-          "</ul></div>"
+    str = "申请编号"
     aid_detail.short_description = str
     search_fields = ['auid', "aid__aid"]
     list_filter = ['austatus', "autime"]
+
+    list_export = ''
+    import_export_args = {'import_resource_class': AuditResource, 'export_resource_class': AuditResource}
 
     # 删除屏蔽
     @staticmethod

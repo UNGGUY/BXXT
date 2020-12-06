@@ -17,7 +17,7 @@ class Manager(models.Model):
     mid = models.CharField('账户', max_length=20)  # 账户Mid
     pw = models.CharField('密码', max_length=16)  # 账户密码pw
     mname = models.CharField('姓名', max_length=20)  # 用户姓名mname
-    type = models.CharField('身份', choices=Type.choices, max_length=20)
+    type = models.CharField('身份', choices=Type.choices, max_length=20, default='2')
     right = models.IntegerField('有效数量', default=0)
     count = models.IntegerField('处理数量', default=0)
     isDelete = models.BooleanField('是否删除', default=False, null=True)  # 删除标识 默认default  或 true null
@@ -27,21 +27,24 @@ class Manager(models.Model):
 
     def save(self):
         models.Model.save(self, force_insert=False, force_update=False, using=None, update_fields=None)
-        print(self.type)
-        if self.type == '0':  # 管理员
-            admin = Group.objects.filter(name='admin').first()  # 二级管理组 是管理员在xadmin后台添加的权限组
-        else:
-            if self.type == '1':  # 负责人
-                admin = Group.objects.filter(name='manager').first()  # 二级管理组 是管理员在xadmin后台添加的权限组
-        user = adminUser(username=self.mid)
-        user.set_password(self.pw)
-        user.is_superuser = False
-        user.is_active = True
-        user.first_name = self.mname
-        user.is_staff = True
-        print(user)
-        user.save()  # 先生成用户
-        user.groups.add(admin)
+        try:
+            adminUser.objects.get(username=self.mid)
+        except:
+            if self.type == '0':  # 管理员
+                admin = Group.objects.filter(name='admin').first()  # 二级管理组 是管理员在xadmin后台添加的权限组
+            else:
+                if self.type == '1':  # 负责人
+                    admin = Group.objects.filter(name='manager').first()  # 二级管理组 是管理员在xadmin后台添加的权限组
+            if self.type == '1' or self.type == '0':
+                user = adminUser(username=self.mid)
+                user.set_password(self.pw)
+                user.is_superuser = False
+                user.is_active = True
+                user.first_name = self.mname
+                user.is_staff = True
+                user.save()  # 先生成用户
+                user.groups.add(admin)
+
 
     class Meta:
         db_table = "manager"

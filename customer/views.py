@@ -159,6 +159,7 @@ def applys(request):
     context={'User':user,'latest_apply_list':latest_apply_list}
     return render(request,'customer/applys.html',context)
 
+
 def records(request,apply_id):
     """
     docstring
