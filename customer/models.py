@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.models import Group, User as adminUser
 # import MySQLdb
 
 
@@ -23,6 +24,24 @@ class Manager(models.Model):
 
     def __str__(self):
         return self.mid
+
+    def save(self):
+        models.Model.save(self, force_insert=False, force_update=False, using=None, update_fields=None)
+        print(self.type)
+        if self.type == '0':  # 管理员
+            admin = Group.objects.filter(name='admin').first()  # 二级管理组 是管理员在xadmin后台添加的权限组
+        else:
+            if self.type == '1':  # 负责人
+                admin = Group.objects.filter(name='manager').first()  # 二级管理组 是管理员在xadmin后台添加的权限组
+        user = adminUser(username=self.mid)
+        user.set_password(self.pw)
+        user.is_superuser = False
+        user.is_active = True
+        user.first_name = self.mname
+        user.is_staff = True
+        print(user)
+        user.save()  # 先生成用户
+        user.groups.add(admin)
 
     class Meta:
         db_table = "manager"
@@ -171,6 +190,7 @@ class Detail(models.Model):
         ('-1', '不合格')
     )
     dstatus = models.CharField('状态', choices=status, default='验证', max_length=20)  # 表单状态 默认false是合格
+    msg = models.CharField('备注', max_length=200, null=True, blank=True)  # 备注信息msg
 
     def __str__(self):
         return self.did
