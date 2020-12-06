@@ -2,39 +2,49 @@
 {% load static%}
 {% block title %}log in{% endblock %}
 {% block css %}
-    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
 {% endblock %}
 
 
 {% block content %}
 
+<<<<<<< HEAD
+<div class="container" style="width: 20%;">
+        <form class='form-login' action="/bxxt/customer/login/" method="post">
+=======
         <div class="container col-md-4">
             <form class='form-login' action="/bxxt/customer/login/" method="post">
+>>>>>>> c0db779a9371f86bb7c67cf7702ba64b54c40666
 
-                {% if message %}
-                    <div class="alert alert-warning">{{ message }}</div>
-                {% endif %}
+            {% if message %}
+            <div class="alert alert-warning">{{ message }}</div>
+            {% endif %}
 
-                {% csrf_token %}
-                <h2 class="text-center" style="color: #ffc107">Welcome to sign in!</h2>
+            {% csrf_token %}
+            <h2 class="text-center" style="color: #ffc107">Welcome to sign in!</h2>
 
 
-                <div class="form-group">
-                  {{ login_form.username.label_tag }}
-                  {{ login_form.username}}
-                </div>
-                <div class="form-group" >
-                  {{ login_form.password.label_tag }}
-                  {{ login_form.password }}
-                </div>
+            <div class="form-group">
+                {{ login_form.username.label_tag }}
+                {{ login_form.username}}
+            </div>
+            <div class="form-group">
+                {{ login_form.password.label_tag }}
+                {{ login_form.password }}
+            </div>
 
-                <div align="center">
-                    <button type="reset"  class="btn btn-default pull-left">RESET</button>
-                    <button type="submit" class="btn btn-primary pull-right">SUBMIT</button>
-                </div>
+            <div align="center">
+                <button type="reset" class="btn btn-default pull-left">RESET</button>
+                <button type="submit" class="btn btn-primary pull-right">SUBMIT</button>
+            </div>
 
+<<<<<<< HEAD
+        </form>
+</div> <!-- /container -->
+=======
             </form>
     </div> <!-- /container -->
+>>>>>>> c0db779a9371f86bb7c67cf7702ba64b54c40666
 
 
 

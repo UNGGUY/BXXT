@@ -14,5 +14,7 @@ urlpatterns = [
     path('records/<int:apply_id>/',views.records,name='records'),
     path('details/<int:record_id>/',views.details,name='details'),
     path('detail/<int:detail_id>/',views.detail,name='detail'),
-
+    
+    path('documents/<int:apply_id>/',views.documents,name='documents'),
+    
 ]

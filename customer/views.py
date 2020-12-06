@@ -210,3 +210,9 @@ def detail(request,detail_id):
     # detail = get_object_or_404(Detail, pk=detail_id)
     # return render(request, 'polls/detail.html', {'detail': detail})
 
+
+def documents(request,apply_id):
+    """
+    docstring
+    """
+    return render(request,'customer/documents.html')
