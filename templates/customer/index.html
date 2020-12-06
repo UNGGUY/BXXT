@@ -44,30 +44,24 @@
 
 
 {% block content %}
-  <div class="jumbotron">
-
-    <div class="container">
-       {% if request.session.is_login %}
-        <h1>你好,{{ request.session.user_name }}！欢迎回来！</h1>
-        {% else %}
-        <h1>您尚未登录，只能访问公开内容！</h1>
-        {% endif %}
-
+  <div class="jumbotron" style="background-color: white;">
 
     <div class="container" style="max-width: 80%;">
-      <h1 class="display-4">Hello, world!</h1>
-
-      <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to
-        featured content or information.</p>
+      {% if request.session.is_login %}
+      <h1 class="display-4">你好,{{ request.session.user_name }}！欢迎回来！</h1> 
+      <p class="lead">本系统是为了使报销更加方便所开发的线上医疗报销系统!</p>
       <hr class="my-4">
-      <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
+      <p>请您使用下面的按钮来开始您的报销业务。</p>
       <a class="btn btn-primary btn-lg" href="business" role="button">REIMBURSEMENT</a>
+      {% else %}
+      <h1 class="display-4">您尚未登录，只能访问公开内容！</h1>
+      <p class="lead">本系统是为了使报销更加方便所开发的线上医疗报销系统!</p>
+      {% endif %}
     </div>
   </div>
 
 
 
-  <div class="container">
 
   <div class="container" style="max-width: 80%;">
 
@@ -119,5 +113,6 @@
 
       </div>
     </div>
+  </div>
 
 {% endblock %}
