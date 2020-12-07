@@ -37,9 +37,9 @@
     <table class="myTable">
         <tbody>
             <tr>
-                <th width="15%">报销号：</th>
+                <th width="15%">申请编号：</th>
                 <td width="20%">{{document.aid}}</td>
-                <th width="10%">报账号：</th>
+                <th width="10%">报销号：</th>
                 <td width="20%">{{document.rid}}</td>
                 <th width="25%" rowspan="3"><img src="/refundproof/qrcode/afb715ae61584abea32b35686cdf75e8.png"
                         alt="UIBE报销二维码"></th>
@@ -64,13 +64,13 @@
             <tr>
                 <th width="18%">医事服务费</th>
                 <td width="12.5%">{{document.register}}</td>
-                <th width="12.5%%">个负比例</th>
+                <th width="12.5%%">合计金额</th>
                 <td width="12.5%%">
-                    <!--0.0-->
+                    {{document.cost}}
                 </td>
-                <th width="12.5%">个负金额</th>
+                <th width="12.5%">可报金额</th>
                 <td width="12.5%">
-                    <!-- 0.00 -->
+                    {{document.money}}
                 </td>
                 <th width="12.5%"><a href="../showRecord/afb715ae61584abea32b35686cdf75e8">凭证数</a></th>
                 <td width="7%">{{document.desum}}</td>
@@ -78,30 +78,40 @@
             <tr>
                 <th width="18%">医药费</th>
                 <td width="12.5%">{{document.invoice}}</td>
-                <th width="12.5%">自费款</th>
-                <td width="12.5%">10.00</td>
-                <th colspan="2">报销金额（大写）</th>
+                <th width="12.5%">报销比例</th>
+                <td width="12.5%">{{document.ratio}}</td>
+                <th colspan="2">报销金额</th>
                 <td colspan="3">
-                    <!-- 40.00(肆拾元整) -->
+                    {{document.money_bx}}
                 </td>
             </tr>
         </tbody>
     </table><br><br>
-    <table class="myTable">
-        <tbody>
-            <tr>
-                <th width="20%">财务处审核签章</th>
-                <td width="12.5%"></td>
-                <th width="30%">公疗办医生审核签章</th>
-                <td width="12.5%"></td>
-                <th>报销人</th>
-                <td width="12.5%"></td>
-            </tr>
-        </tbody>
-    </table>
+
 
     <hr class="my-5">
     {% endfor %}
+    <table class="myTable">
+        <tbody>
+        <tr>
+            <th style="text-align: left;font-size: x-large" >&nbsp;&nbsp;&nbsp;&nbsp;合计金额:&nbsp;&nbsp;{{amount}}</th>
+        </tr>
+        </tbody>
+    </table>
+    <h4>&nbsp;</h4>
+    <table class="myTable">
+        <tbody>
+
+        <tr>
+            <th width="20%">财务处审核签章</th>
+            <td width="12.5%"></td>
+            <th width="30%">公疗办医生审核签章</th>
+            <td width="12.5%"></td>
+            <th>报销人</th>
+            <td width="12.5%"></td>
+        </tr>
+        </tbody>
+    </table>
     {% else %}
     <p>NO RECORDS ARE AVAILABLE.</p>
     {% endif %}

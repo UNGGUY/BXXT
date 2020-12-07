@@ -265,7 +265,7 @@ class RecordAdmin(object):
 
 
 class DetailAdmin(object):
-    list_display = ['rid', 'did', 'dtime', 'type', 'money', 'money_bx', 'hname', 'sname', 'dstatus', 'folder', 'msg']
+    list_display = ['did', 'rid', 'dtime', 'type', 'money', 'money_bx', 'hname', 'sname', 'dstatus', 'msg', 'image_data']
     model_icon = 'fa fa-tags'
     list_editable = ['money_bx', "dstatus"]
     # readonly_fields = ('rid', 'did', 'dtime', 'type', 'hname', 'sid', 'folder')

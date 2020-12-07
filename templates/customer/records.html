@@ -19,6 +19,7 @@
                 <th scope="col">RECORD No.</th>
                 <th scope="col">DATATIME</th>
                 <th scope="col">MONEY</th>
+                <th scope="col">BX_MONEY</th>
                 <th scope="col">MESSAGE</th>
                 <th scope="col">OPERATION</th>
             </tr>
@@ -30,8 +31,15 @@
                 <th>{{record.rid}}</th>
                 <td>{{record.rtime}}</td>
                 <td>{{record.money}}</td>
+                <td>{{record.money_bx}}</td>
                 <td>{{record.msg}}</td>
-                <td><a href="http://127.0.0.1:8000/bxxt/customer/details/{{record.id}}">Details</a></td>
+                <td>
+                    <a href="/bxxt/customer/details/{{record.id}}">Details</a>
+                    {% if record.aid.astatus == '0' %}
+                    &nbsp;
+                    <a href="/bxxt/customer/records/delete/{{record.id}}">Delete</a>
+                    {% endif %}
+                </td>
             </tr>
             {% endfor %}
         </tbody>

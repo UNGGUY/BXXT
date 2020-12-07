@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import Group, User as adminUser
+from django.utils.html import format_html
 # import MySQLdb
 
 
@@ -158,7 +159,7 @@ class Record(models.Model):
     rtime = models.DateField('修改时间', auto_now=True, auto_now_add=False)  # 最后修改时间rtime
     money = models.DecimalField('金额', max_digits=8, decimal_places=2, default=0.00)  # 金额money 6位.2位
     money_bx = models.DecimalField('可报销金额', max_digits=8, decimal_places=2, default=0.00)  # 可报销金额money 6位.2位
-    msg = models.CharField('备注', max_length=200, null=True,blank=True)  # 备注信息msg
+    msg = models.CharField('备注', max_length=200, null=True, blank=True, default='空')  # 备注信息msg
 
     def __str__(self):
         return self.rid
@@ -188,17 +189,26 @@ class Detail(models.Model):
     hname = models.CharField('医院', max_length=20, null=True, blank=True)  # 医院hname
     sname = models.CharField('科室', max_length=20, null=True, blank=True)  # 科室sname
     status = (
-        ('0', '验证'),
+        ('0', '审核中'),
         ('1', '合格'),
         ('-1', '不合格')
     )
-    dstatus = models.CharField('状态', choices=status, default='验证', max_length=20)  # 表单状态 默认false是合格
-    msg = models.CharField('备注', max_length=200, null=True, blank=True)  # 备注信息msg
+    dstatus = models.CharField('状态', choices=status, default='0', max_length=20)  # 表单状态 默认false是合格
+    msg = models.CharField('备注', max_length=200, null=True, blank=True, default="空")  # 备注信息msg
 
     def __str__(self):
         return self.did
 
-    folder = models.ImageField('图片', upload_to='images')
+    folder = models.ImageField('图片', upload_to='images/%Y/%m/%d')
+
+    def image_data(self):
+        jump ="MEDIA_URL"+self.folder.url;
+        return format_html(
+            '<img src="{}" width="100px" onclick="window.open(\''+self.folder.url+'\')"/>',
+            self.folder.url,
+        )
+
+    image_data.short_description = u'图片'
 
     class Meta:
         db_table = "detail"

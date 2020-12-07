@@ -15,16 +15,42 @@
 
 {% block content %}
     <div class="container" style="max-width: 80%;">
+        {% if detail.rid.aid.astatus == '0'%}
+        <!--        编辑按钮-->
+        <div style="text-align:left;margin-top: 10px;margin-bottom: 10px">
+            <a href="#" class="btn btn-primary col-2">EDIT</a>
+        </div>
+        {% elif detail.rid.aid.astatus == '2' and detail.dstatus == '-1'%}
+        <div style="text-align:left;margin-top: 10px;margin-bottom: 10px">
+            <a href="#" class="btn btn-primary col-2">EDIT</a>
+        </div>
+        {% endif %}
         <ul class="list-group list-group-flush">
             <li class="list-group-item list-group-item-primary">{{ detail.get_type_display }}</li>
+            <li class="list-group-item">{{detail.did}}</li>
             <li class="list-group-item">{{detail.dtime}}</li>
             <li class="list-group-item">{{detail.hname}}</li>
-            <li class="list-group-item">{{detail.did}}</li>
+            <li class="list-group-item">{{detail.sname}}</li>
+            {% if detail.money != 0 %}
+            <li class="list-group-item">{{detail.money}}</li>
+            <li class="list-group-item">{{detail.money_bx}}</li>
+            {% endif %}
+            {% if detail.rid.aid.astatus != '0' %}
             <li class="list-group-item">{{detail.get_dstatus_display}}</li>
+            {% endif %}
+            <li class="list-group-item">
+                {% if detail.msg == None %}
+                    无
+                {% else%}
+                    {{detail.msg}}
+                {% endif %}
+            </li>
+
         </ul>
         <div class="text-center">
-            <img src="{% static 'pokemon-wallpaper-1920x1080.jpg' %}" class="img-fluid" alt="detail image">
+            <img src="{{ MEDIA_URL}}{{detail.folder}}"  class="img-fluid" alt="detail image">
         </div>
+
     </div>
 
 

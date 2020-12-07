@@ -48,7 +48,7 @@ class DetailResource(resources.ModelResource):
 
     class Meta:
         model = Detail
-        fields = ('id', 'rid', 'did', 'dtime', 'type', 'money', 'money_bx', 'hname', 'sname', 'dsatus', 'msg')
+        fields = ('id', 'rid', 'did', 'dtime', 'type', 'money', 'money_bx', 'hname', 'sname', 'dsatus', 'msg', 'folder')
 
 
 class AuditResource(resources.ModelResource):

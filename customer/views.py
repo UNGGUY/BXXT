@@ -1,10 +1,11 @@
 import hashlib
+from decimal import Decimal
 
 from django.shortcuts import render, redirect
 
 from django.shortcuts import render, get_object_or_404
 from customer.models import User, Detail, Apply, Record
-from django.db.models import Q
+from django.db.models import Q, Sum, Count
 import datetime
 
 # Create your views here.
@@ -91,11 +92,11 @@ def register(request):
                 message = "两次输入的密码不同！"
                 return render(request, 'customer/register.html', locals())
             else:
-                same_name_user = models.User.objects.filter(name=username)
+                same_name_user = models.User.objects.get(name=username)
                 if same_name_user:  # 用户名唯一
                     message = '用户已经存在，请重新选择用户名！'
                     return render(request, 'customer/register.html', locals())
-                same_email_user = models.User.objects.filter(email=email)
+                same_email_user = models.User.objects.get(email=email)
                 if same_email_user:  # 邮箱地址唯一
                     message = '该邮箱地址已被注册，请使用别的邮箱！'
                     return render(request, 'customer/register.html', locals())
@@ -138,63 +139,60 @@ def applys(request):
     """
     docstring
     """
-    user = models.User.objects.filter(uid=request.session['user_id'])
+    user = models.User.objects.get(uid=request.session['user_id'])
     latest_apply_list = models.Apply.objects.filter(Q(uid__uid=request.session['user_id']) & Q(isDelete=False) & ~Q(
         astatus='4'))
     context = {'User': user, 'latest_apply_list': latest_apply_list}
     return render(request, 'customer/applys.html', context)
 
 
+def applys_delete(request, apply_id):
+    models.Apply.objects.get(id=apply_id).delete()
+    return redirect('/bxxt/customer/applys/')
+
+
 def records(request, apply_id):
     """
     docstring
     """
-    user = User(uid='arstdhneio', uname='UNGGOY', tel='18201529287', money=1000, age=24, address='beijing')
-    latest_record_list = [
-        Record(id=1, rid='xxxx', rtime=datetime.datetime.now(), msg='hello', money=100),
-        Record(id=2, rid='xxxx', rtime=datetime.datetime.now(), msg='world', money=100),
-        Record(id=3, rid='xxxx', rtime=datetime.datetime.now(), msg='Django', money=100),
-        Record(id=4, rid='xxxx', rtime=datetime.datetime.now(), msg='what', money=100),
-        Record(id=5, rid='xxxx', rtime=datetime.datetime.now(), msg='fuck', money=100),
-    ]
-    latest_detail_list = models.Detail.objects.filter(rid=1)
+    user = models.User.objects.get(uid=request.session['user_id'])
+    latest_record_list = models.Record.objects.filter(aid__id=apply_id)
     context = {'User': user, 'latest_record_list': latest_record_list}
 
     return render(request, 'customer/records.html', context)
+
+
+def records_delete(request, record_id):
+    record = models.Record.objects.get(id=record_id)
+    aid = record.aid.id
+    record.delete()
+    return redirect('/bxxt/customer/records/'+str(aid))
 
 
 def details(request, record_id):
     """
     docstring
     """
-
-    user = User(uid='arstdhneio', uname='UNGGOY', tel='18201529287', money=1000, age=24, address='beijing')
-    latest_detail_list = [
-        Detail(id=1, did='xxxx', hname='evilhospital', dstatus="合格", dtime=datetime.datetime.now(), money="-",
-               type="转诊单"),
-        Detail(id=2, did='xxxx', hname='evilhospital', dstatus="合格", dtime=datetime.datetime.now(), money=1000,
-               type="挂号单"),
-        Detail(id=3, did='xxxx', hname='evilhospital', dstatus="合格", dtime=datetime.datetime.now(), money=1000,
-               type="发票"),
-        Detail(id=4, did='xxxx', hname='evilhospital', dstatus="合格", dtime=datetime.datetime.now(), money="-",
-               type="明细"),
-    ]
-    latest_detail_list = models.Detail.objects.filter(rid="0000000001")
-    context={'latest_detail_list':latest_detail_list,
-        'User':user
-    }
-    return render(request,'customer/details.html',context)
+    # 如果状态为待报销，则只输出合格的
+    record = models.Apply.objects.get(record__id=record_id)
+    if record.astatus == '3' or record.astatus == '4':
+        latest_detail_list = models.Detail.objects.filter(Q(rid__id=record_id) & Q(dstatus='1'))
+    else:
+        latest_detail_list = models.Detail.objects.filter(rid__id=record_id)
+    user = models.User.objects.get(uid=request.session['user_id'])
+    context = {'latest_detail_list': latest_detail_list,
+               'User': user
+               }
+    return render(request, 'customer/details.html', context)
 
 
 def detail(request, detail_id):
     """
     docstring
     """
-    user = User(uid='arstdhneio', uname='UNGGOY', tel='18201529287', money=1000, age=24, address='beijing')
-    detail = Detail(id=1, did='xxxx', hname='hospital', dstatus="合格", dtime=datetime.datetime.now(), money=1000,
-                    type="转诊单")
-
-    return render(request, 'customer/detail.html', {'detail': detail, 'User': user})
+    user = models.User.objects.get(uid=request.session['user_id'])
+    rs = models.Detail.objects.get(id=detail_id)
+    return render(request, 'customer/detail.html', {'detail': rs, 'User': user})
 
     # 数据库直接用这个
     # detail = get_object_or_404(Detail, pk=detail_id)
@@ -205,19 +203,85 @@ def documents(request, apply_id):
     """
     docstring
     """
-    user=User(uid='arstdhneio',uname='UNGGOY',tel='18201529287',money=1000,age=24,address='beijing')
-    
-    latest_document_list=[
-        {'aid':1,'rid':1,'dtime':datetime.datetime.now(),'register':100,'invoice':1000,'desum':3},
-        {'aid':2,'rid':2,'dtime':datetime.datetime.now(),'register':20,'invoice':500,'desum':2},
-        {'aid':3,'rid':3,'dtime':datetime.datetime.now(),'register':30,'invoice':200,'desum':5},
-        {'aid':4,'rid':4,'dtime':datetime.datetime.now(),'register':50,'invoice':500,'desum':6},
-        {'aid':5,'rid':5,'dtime':datetime.datetime.now(),'register':40,'invoice':450,'desum':3},
-    ]
-    context={'latest_document_list':latest_document_list,
-        'User':user
-    }
+    user = models.User.objects.get(uid=request.session['user_id'])
+    details = models.Detail.objects.filter(Q(rid__aid=apply_id) & Q(dstatus='1') & Q(type='1')).\
+        aggregate(sum=Sum('money'))
+    print(details['sum'])
+    records = models.Record.objects.filter(aid=apply_id)
+    latest_document_list = list()
+    amount = 0
+    for record in records:
+        money_reg = models.Detail.objects.filter(Q(rid=record.id) & Q(dstatus='1') & Q(type='1')). \
+            aggregate(sum=Sum('money'), bx=Sum('money_bx'))
+        money_inv = models.Detail.objects.filter(Q(rid=record.id) & Q(dstatus='1') & Q(type='2')). \
+            aggregate(sum=Sum('money'), bx=Sum('money_bx'))
+        desum = models.Detail.objects.filter(Q(rid=record.id) & Q(dstatus='1')). count()
+        ratio = user.utype.ratio
+        if user.money >= user.utype.limit:
+            ratio += user.utype.change
+        if not money_reg['sum']:
+            money_reg['sum'] = 0
+        if not money_inv['sum']:
+            money_inv['sum'] = 0
+        if not money_reg['bx']:
+            money_reg['bx'] = 0
+        if not money_inv['bx']:
+            money_inv['bx'] = 0
+        document = {'aid': record.aid,
+                    'rid': record.rid,
+                    'dtime': models.Detail.objects.filter(rid=record.id)[0].dtime,
+                    'register': money_reg['sum'],
+                    'invoice': money_inv['sum'],
+                    'cost': money_reg['sum']+money_inv['sum'],
+                    'money': money_reg['bx']+money_inv['bx'],
+                    'ratio': str(ratio)+"%",
+                    'money_bx': Decimal((money_reg['bx']+money_inv['bx'])*ratio/100).quantize(Decimal('0.00')),
+                    'desum': desum
+                    }
+        latest_document_list.append(document)
+        amount +=Decimal((money_reg['bx']+money_inv['bx'])*ratio/100).quantize(Decimal('0.00'))
+
+    context = {'latest_document_list': latest_document_list,
+               'User': user,
+               'amount': amount,
+               }
+
+    return render(request, 'customer/documents.html', context)
 
 
-    return render(request,'customer/documents.html',context)
+def undo(request, apply_id):
+    apply = models.Apply.objects.get(id=apply_id)
+    if apply.astatus == '1':
+        apply.astatus = '0'
+        apply.save()
+    return redirect('/bxxt/customer/applys/')
+
+
+def submit(request, apply_id):
+    apply = models.Apply.objects.get(id=apply_id)
+    apply.astatus = '1'
+    records = models.Record.objects.filter(aid=apply_id)
+    for record in records:
+        details = models.Detail.objects.filter(rid=record.id)
+        count = 0
+        for detail in details:
+            detail.dstatus = '0'
+            count += detail.money
+            detail.save()
+        record.money = count
+        record.money_bx = count
+        record.save()
+    apply.save()
+    return redirect('/bxxt/customer/applys/')
+
+
+def confirm(request, apply_id):
+    apply = models.Apply.objects.get(id=apply_id)
+    apply.astatus = '3'
+    details = models.Detail.objects.filter(Q(rid__aid=apply_id) & Q(dstatus='-1'))
+    for detail in details:
+        detail.delete()
+    apply.save()
+    return redirect('/bxxt/customer/applys/')
+
 

@@ -18,9 +18,10 @@
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">DETAIL No.</th>
-                    <th scope="col">DATE TIME</th>
+                    <th scope="col">EDIT TIME</th>
                     <th scope="col">TYPE</th>
                     <th scope="col">MONEY</th>
+                    <th scope="col">BX_MONEY</th>
                     <th scope="col">STATUS</th>
                     <th scope="col">OPERATION</th>
                 </tr>
@@ -31,11 +32,24 @@
                     <th scope="row">{{forloop.counter}}</th>
                     <td>{{detail.did}}</td>
                     <td>{{detail.dtime}}</td>
-                    <td>{{detail.type}}</td>
-                    <td>{{detail.money}}</td>
+                    <td>{{detail.get_type_display}}</td>
+                    <td>
+                        {% if detail.money == 0%}
+                            --
+                        {% else %}
+                            {{detail.money}}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if detail.money_bx == 0%}
+                            --
+                        {% else %}
+                            {{detail.money_bx}}
+                        {% endif %}
+                    </td>
                     <td>{{detail.get_dstatus_display}}</td>
                     <td>
-                        <a href="http://192.168.1.231:8000/bxxt/customer/detail/{{detail.id}}">Detail</a>
+                        <a href="/bxxt/customer/detail/{{detail.id}}">Detail</a>
                     </td>
                 </tr>
                 {% endfor %}
