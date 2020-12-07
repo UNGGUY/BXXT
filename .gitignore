@@ -1,3 +1,5 @@
 BXXT/settings.py
 .idea/
 customer/migrations
+customer/__init__.py
+BXXT/__init__.py

@@ -19,9 +19,11 @@ class RegisterForm(forms.Form):
 
     password2 = forms.CharField(label="CONFIRM", max_length=256, widget=forms.PasswordInput(attrs={'class': 'form-control'}))
 
-    email = forms.EmailField(label="EMAIL", widget=forms.EmailInput(attrs={'class': 'form-control'}))
+    tel = forms.CharField(label="TELPHONE", max_length= 11, widget=forms.TextInput(attrs={'class': 'form-control'}))
 
     sex = forms.ChoiceField(label='GENDER', choices=gender)
+
+
 
 
 #
