@@ -202,7 +202,6 @@ class Detail(models.Model):
     folder = models.ImageField('图片', upload_to='images/%Y/%m/%d')
 
     def image_data(self):
-        jump ="MEDIA_URL"+self.folder.url;
         return format_html(
             '<img src="{}" width="100px" onclick="window.open(\''+self.folder.url+'\')"/>',
             self.folder.url,
