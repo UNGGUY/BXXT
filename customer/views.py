@@ -191,7 +191,6 @@ def details(request,record_id):
         Detail(id=4,did='xxxx',hname='evilhospital',dstatus="合格",dtime=datetime.datetime.now(),money="-",type="明细"),
     ]
     latest_detail_list = models.Detail.objects.filter(rid="0000000001")
-    print(type(latest_detail_list))
     context={'latest_detail_list':latest_detail_list,
         'User':user
     }
@@ -216,4 +215,18 @@ def documents(request,apply_id):
     """
     docstring
     """
-    return render(request,'customer/documents.html')
+    user=User(uid='arstdhneio',uname='UNGGOY',tel='18201529287',money=1000,age=24,address='beijing')
+    
+    latest_document_list=[
+        {'aid':1,'rid':1,'dtime':datetime.datetime.now(),'register':100,'invoice':1000,'desum':3},
+        {'aid':2,'rid':2,'dtime':datetime.datetime.now(),'register':20,'invoice':500,'desum':2},
+        {'aid':3,'rid':3,'dtime':datetime.datetime.now(),'register':30,'invoice':200,'desum':5},
+        {'aid':4,'rid':4,'dtime':datetime.datetime.now(),'register':50,'invoice':500,'desum':6},
+        {'aid':5,'rid':5,'dtime':datetime.datetime.now(),'register':40,'invoice':450,'desum':3},
+    ]
+    context={'latest_document_list':latest_document_list,
+        'User':user
+    }
+
+
+    return render(request,'customer/documents.html',context)
