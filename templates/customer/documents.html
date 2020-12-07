@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}DOCUMENTS{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+<style>
+    img {
+        width: 80px;
+    }
+
+    .title {
+        font-size: 25px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .myTable {
+        width: 100%;
+        text-align: center;
+        border-collapse: collapse;
+    }
+
+    a {
+        text-decoration: none
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="container" style="max-width: 80; margin-top: 2%;">
+    <table class="myTable">
+        <tbody>
+            <tr>
+                <th width="15%">报销号：</th>
+                <td width="20%">202012000011</td>
+                <th width="10%">报账号：</th>
+                <td width="20%">test1</td>
+                <th width="25%" rowspan="3"><img src="/refundproof/qrcode/afb715ae61584abea32b35686cdf75e8.png"
+                        alt="UIBE报销二维码"></th>
+            </tr>
+            <tr>
+                <th width="15%">姓&nbsp;&nbsp;&nbsp;名：</th>
+                <td width="20%">test1</td>
+                <th width="10%">类&nbsp;&nbsp;&nbsp;别：</th>
+                <td width="20%">在职教工</td>
+            </tr>
+            <tr>
+                <th width="15%">部&nbsp;&nbsp;&nbsp;门：</th>
+                <td width="20%">信息学院</td>
+                <th width="10%">日&nbsp;&nbsp;&nbsp;期：</th>
+                <td width="20%">2020-12-01</td>
+            </tr>
+
+        </tbody>
+    </table><br>
+    <table class="myTable" border="1">
+        <tbody>
+            <tr>
+                <th width="18%">医事服务申报费</th>
+                <td width="12.5%">40.00</td>
+                <th width="12.5%%">个负比例</th>
+                <td width="12.5%%">
+                    <!--0.0-->
+                </td>
+                <th width="12.5%">个负金额</th>
+                <td width="12.5%">
+                    <!-- 0.00 -->
+                </td>
+                <th width="12.5%"><a href="../showRecord/afb715ae61584abea32b35686cdf75e8">凭证数</a></th>
+                <td width="7%">1</td>
+            </tr>
+            <tr>
+                <th width="18%">医事服务费</th>
+                <td width="12.5%">50.00</td>
+                <th width="12.5%">自费款</th>
+                <td width="12.5%">10.00</td>
+                <th colspan="2">报销金额（大写）</th>
+                <td colspan="3">
+                    <!-- 40.00(肆拾元整) -->
+                </td>
+            </tr>
+        </tbody>
+    </table><br><br>
+    <table class="myTable">
+        <tbody>
+            <tr>
+                <th width="20%">财务处审核签章</th>
+                <td width="12.5%"></td>
+                <th width="30%">公疗办医生审核签章</th>
+                <td width="12.5%">test6</td>
+                <th>报销人</th>
+                <td width="12.5%"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<script src="{% static 'jquery/jquery-3.5.1.min.js' %}"></script>
+<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+{% endblock %}
