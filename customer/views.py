@@ -1,13 +1,11 @@
-
 import hashlib
 
 from django.shortcuts import render, redirect
 
-from django.shortcuts import render,get_object_or_404
-from customer.models import User,Detail,Apply,Record
+from django.shortcuts import render, get_object_or_404
+from customer.models import User, Detail, Apply, Record
 from django.db.models import Q
 import datetime
-
 
 # Create your views here.
 from customer import models
@@ -46,7 +44,7 @@ def login(request):
                     request.session['user_id'] = user.uid
                     request.session['user_name'] = user.uname
                     # return redirect('/index/')
-                    #return redirect('sulogin')
+                    # return redirect('sulogin')
                     print(1)
                     return redirect('/bxxt/customer/account')
                 else:
@@ -60,22 +58,19 @@ def login(request):
     return render(request, 'customer/login.html', locals())
 
 
-#个人账户模块
+# 个人账户模块
 def account(request):
     """
     docstring
     """
     # user=User(uid='arstdhneio',uname='UNGGOY',tel='18201529287',money=1000,age=24,address='beijing')
-    user=models.User.objects.get(uid=request.session['user_id'])
+    user = models.User.objects.get(uid=request.session['user_id'])
     if user.sex == "1":
         user.sex = "男"
     else:
         user.sex = "女"
-    context={'User':user}
-    return render(request,'customer/account.html', context)
-
-
-
+    context = {'User': user}
+    return render(request, 'customer/account.html', context)
 
 
 # 注册模块
@@ -130,42 +125,32 @@ def logout(request):
     return redirect('/bxxt/customer/')
 
 
-
-
 def business(request):
     """
     docstring
     """
-    user=User(uid='arstdhneio',uname='UNGGOY',tel='18201529287',money=1000,age=24,address='beijing')
-    context={'User':user}
-    return render(request,'customer/business.html',context)
+    user = User(uid='arstdhneio', uname='UNGGOY', tel='18201529287', money=1000, age=24, address='beijing')
+    context = {'User': user}
+    return render(request, 'customer/business.html', context)
 
 
 def applys(request):
     """
     docstring
     """
-    user=User(uid='arstdhneio',uname='UNGGOY',tel='18201529287',money=1000,age=24,address='beijing')
-    # latest_apply_list=[
-    #     Apply(id=1,aid='xxxx',astatus=0),
-    #     Apply(id=2,aid='xxxx',astatus=1),
-    #     Apply(id=3,aid='xxxx',astatus=2),
-    #     Apply(id=4,aid='xxxx',astatus=3),
-    #     Apply(id=5,aid='xxxx',astatus=4),
-    # ]
     user = models.User.objects.filter(uid=request.session['user_id'])
-    latest_apply_list = models.Apply.objects.filter(uid__uid=request.session['user_id'])
-    print(latest_apply_list)
-    context={'User':user,'latest_apply_list':latest_apply_list}
-    return render(request,'customer/applys.html',context)
+    latest_apply_list = models.Apply.objects.filter(Q(uid__uid=request.session['user_id']) & Q(isDelete=False) & ~Q(
+        astatus='4'))
+    context = {'User': user, 'latest_apply_list': latest_apply_list}
+    return render(request, 'customer/applys.html', context)
 
 
-def records(request,apply_id):
+def records(request, apply_id):
     """
     docstring
     """
-    user=User(uid='arstdhneio',uname='UNGGOY',tel='18201529287',money=1000,age=24,address='beijing')
-    latest_record_list=[
+    user = User(uid='arstdhneio', uname='UNGGOY', tel='18201529287', money=1000, age=24, address='beijing')
+    latest_record_list = [
         Record(id=1, rid='xxxx', rtime=datetime.datetime.now(), msg='hello', money=100),
         Record(id=2, rid='xxxx', rtime=datetime.datetime.now(), msg='world', money=100),
         Record(id=3, rid='xxxx', rtime=datetime.datetime.now(), msg='Django', money=100),
@@ -173,47 +158,52 @@ def records(request,apply_id):
         Record(id=5, rid='xxxx', rtime=datetime.datetime.now(), msg='fuck', money=100),
     ]
     latest_detail_list = models.Detail.objects.filter(rid=1)
-    context={'User':user,'latest_record_list':latest_record_list}
+    context = {'User': user, 'latest_record_list': latest_record_list}
 
-    return render(request,'customer/records.html',context)
+    return render(request, 'customer/records.html', context)
 
 
-def details(request,record_id):
+def details(request, record_id):
     """
     docstring
     """
 
-    user=User(uid='arstdhneio',uname='UNGGOY',tel='18201529287',money=1000,age=24,address='beijing')
-    latest_detail_list=[
-        Detail(id=1,did='xxxx',hname='evilhospital',dstatus="合格",dtime=datetime.datetime.now(),money="-",type="转诊单"),
-        Detail(id=2,did='xxxx',hname='evilhospital',dstatus="合格",dtime=datetime.datetime.now(),money=1000,type="挂号单"),
-        Detail(id=3,did='xxxx',hname='evilhospital',dstatus="合格",dtime=datetime.datetime.now(),money=1000,type="发票"),
-        Detail(id=4,did='xxxx',hname='evilhospital',dstatus="合格",dtime=datetime.datetime.now(),money="-",type="明细"),
+    user = User(uid='arstdhneio', uname='UNGGOY', tel='18201529287', money=1000, age=24, address='beijing')
+    latest_detail_list = [
+        Detail(id=1, did='xxxx', hname='evilhospital', dstatus="合格", dtime=datetime.datetime.now(), money="-",
+               type="转诊单"),
+        Detail(id=2, did='xxxx', hname='evilhospital', dstatus="合格", dtime=datetime.datetime.now(), money=1000,
+               type="挂号单"),
+        Detail(id=3, did='xxxx', hname='evilhospital', dstatus="合格", dtime=datetime.datetime.now(), money=1000,
+               type="发票"),
+        Detail(id=4, did='xxxx', hname='evilhospital', dstatus="合格", dtime=datetime.datetime.now(), money="-",
+               type="明细"),
     ]
     latest_detail_list = models.Detail.objects.filter(rid="0000000001")
     print(type(latest_detail_list))
-    context={'latest_detail_list':latest_detail_list,
-        'User':user
-    }
-    return render(request,'customer/details.html',context)
+    context = {'latest_detail_list': latest_detail_list,
+               'User': user
+               }
+    return render(request, 'customer/details.html', context)
 
 
-def detail(request,detail_id):
+def detail(request, detail_id):
     """
     docstring
     """
-    user=User(uid='arstdhneio',uname='UNGGOY',tel='18201529287',money=1000,age=24,address='beijing')
-    detail=Detail(id=1,did='xxxx',hname='hospital',dstatus="合格",dtime=datetime.datetime.now(),money=1000,type="转诊单")
+    user = User(uid='arstdhneio', uname='UNGGOY', tel='18201529287', money=1000, age=24, address='beijing')
+    detail = Detail(id=1, did='xxxx', hname='hospital', dstatus="合格", dtime=datetime.datetime.now(), money=1000,
+                    type="转诊单")
 
-    return render(request,'customer/detail.html',{'detail':detail,'User':user})
+    return render(request, 'customer/detail.html', {'detail': detail, 'User': user})
 
     # 数据库直接用这个
     # detail = get_object_or_404(Detail, pk=detail_id)
     # return render(request, 'polls/detail.html', {'detail': detail})
 
 
-def documents(request,apply_id):
+def documents(request, apply_id):
     """
     docstring
     """
-    return render(request,'customer/documents.html')
+    return render(request, 'customer/documents.html')

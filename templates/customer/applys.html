@@ -18,37 +18,45 @@
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">APPLY No.</th>
+                <th scope="col">TIME APPLY</th>
                 <th scope="col">STATUS</th>
+                <th scope="col">DETAIL</th>
                 <th scope="col">OPERATION</th>
             </tr>
         </thead>
         <tbody>
             {% for apply in latest_apply_list %}
             <tr>
-                <th scope="row">{{forloop.counter}}</th>
+                <th scope="row" >{{forloop.counter}}</th>
                 <td>{{apply.aid}}</td>
                 <td>
-                    {% if apply.astatus == 0 %}
-                    <p>Submit</a>
-                    {% elif apply.astatus == 1 %}
+                    {{apply.atime}}
+                </td>
+                <td>
+                    {% if apply.astatus == '0' %}
+                    <p>Submit</p>
+                    {% elif apply.astatus == '1' %}
                     <p>Applying</p>
-                    {% elif apply.astatus == 2 %}
-                    <p>Confirm</a>
-                    {% elif apply.astatus == 3 %}
+                    {% elif apply.astatus == '2' %}
+                    <p>Confirm</p>
+                    {% elif apply.astatus == '3' %}
                     <p>Unfinish</p>
                     {% else %}
-                    <p>finish</p>
+                    <p>Finished</p>
                     {% endif %}
                 </td>
                 <td>
                     <a href="/bxxt/customer/records/{{apply.id}}">Records</a>
-                    {% if apply.astatus == 0 %}
+                </td>
+                <td>
+                    {% if apply.astatus == '0' %}
                     <a href="/bxxt/customer/submit/{{apply.id}}">Submit</a>
-                    {% elif apply.astatus == 1 %}
-                    {% elif apply.astatus == 2 %}
+                    &nbsp;&nbsp;
+                    <a href="/bxxt/customer/delete/{{apply.id}}">Delete</a>
+                    {% elif apply.astatus == '1' %}
+                    {% elif apply.astatus == '2' %}
                     <a href="/bxxt/customer/confirm{{apply.id}}">Confirm</a>
-                    {% elif apply.astatus == 3 %}
-                    {% else %}
+                    {% elif apply.astatus == '3' %}
                     <a href="/bxxt/customer/documents/{{apply.id}}">Documents</a>
                     {% endif %}
                 </td>
