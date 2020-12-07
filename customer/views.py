@@ -166,11 +166,11 @@ def records(request,apply_id):
     """
     user=User(uid='arstdhneio',uname='UNGGOY',tel='18201529287',money=1000,age=24,address='beijing')
     latest_record_list=[
-        Record(id=1,rid='xxxx',rtime=datetime.datetime.now(),msg='hello',money=100),
-        Record(id=2,rid='xxxx',rtime=datetime.datetime.now(),msg='world',money=100),
-        Record(id=3,rid='xxxx',rtime=datetime.datetime.now(),msg='Django',money=100),
-        Record(id=4,rid='xxxx',rtime=datetime.datetime.now(),msg='what',money=100),
-        Record(id=5,rid='xxxx',rtime=datetime.datetime.now(),msg='fuck',money=100),
+        Record(id=1, rid='xxxx', rtime=datetime.datetime.now(), msg='hello', money=100),
+        Record(id=2, rid='xxxx', rtime=datetime.datetime.now(), msg='world', money=100),
+        Record(id=3, rid='xxxx', rtime=datetime.datetime.now(), msg='Django', money=100),
+        Record(id=4, rid='xxxx', rtime=datetime.datetime.now(), msg='what', money=100),
+        Record(id=5, rid='xxxx', rtime=datetime.datetime.now(), msg='fuck', money=100),
     ]
     latest_detail_list = models.Detail.objects.filter(rid=1)
     context={'User':user,'latest_record_list':latest_record_list}
