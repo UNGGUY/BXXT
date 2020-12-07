@@ -180,18 +180,10 @@ def details(request, record_id):
                type="明细"),
     ]
     latest_detail_list = models.Detail.objects.filter(rid="0000000001")
-<<<<<<< HEAD
     context={'latest_detail_list':latest_detail_list,
         'User':user
     }
     return render(request,'customer/details.html',context)
-=======
-    print(type(latest_detail_list))
-    context = {'latest_detail_list': latest_detail_list,
-               'User': user
-               }
-    return render(request, 'customer/details.html', context)
->>>>>>> cf57e2d6aba49624c0607f7f57f4a20d7306e6da
 
 
 def detail(request, detail_id):
@@ -213,7 +205,6 @@ def documents(request, apply_id):
     """
     docstring
     """
-<<<<<<< HEAD
     user=User(uid='arstdhneio',uname='UNGGOY',tel='18201529287',money=1000,age=24,address='beijing')
     
     latest_document_list=[
@@ -229,6 +220,4 @@ def documents(request, apply_id):
 
 
     return render(request,'customer/documents.html',context)
-=======
-    return render(request, 'customer/documents.html')
->>>>>>> cf57e2d6aba49624c0607f7f57f4a20d7306e6da
+
