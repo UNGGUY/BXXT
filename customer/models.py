@@ -84,7 +84,7 @@ class User(models.Model):
     # 手机号
     tel = models.CharField('手机号', max_length=11)
     # 身份
-    utype = models.ForeignKey(UserType, on_delete=models.PROTECT, verbose_name=u"人员类型", default=1)
+    utype = models.ForeignKey(UserType, on_delete=models.PROTECT, verbose_name=u"人员类型", default='1')
     # 性别
     sex = models.CharField('性别', max_length=20, choices=gender)
     # 报销金额
