@@ -1,7 +1,7 @@
 import hashlib
 from decimal import Decimal
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_list_or_404
 
 from django.shortcuts import render, get_object_or_404
 from customer.models import User, Detail, Apply, Record
@@ -40,22 +40,23 @@ def login(request):
             password = login_form.cleaned_data['password']
             try:
                 user = models.User.objects.get(Q(uid=username) | Q(tel=username))
+               # user = models.User.objects.get(Q(uid=username) | Q(tel=username) | Q(uname=username))
                 if user.password == password:
                     request.session['is_login'] = True
                     request.session['user_id'] = user.uid
                     request.session['user_name'] = user.uname
                     # return redirect('/index/')
                     # return redirect('sulogin')
-                    print(1)
+
                     return redirect('/bxxt/customer/account')
                 else:
                     message = "密码不正确！"
             except:
                 message = "用户不存在"
-        print(3)
+
         return render(request, 'customer/login.html', locals())
     login_form = UserForm()
-    print(4)
+
     return render(request, 'customer/login.html', locals())
 
 
@@ -71,6 +72,18 @@ def account(request):
     else:
         user.sex = "女"
     context = {'User': user}
+
+    if request.method == "POST":
+        tel = request.POST.get('phonenubmer',None)
+        province = request.POST.get('province',None)
+        print(tel)
+        print(province)
+
+        user.tel = tel
+        user.address = province
+        user.save()
+
+
     return render(request, 'customer/account.html', context)
 
 
@@ -86,28 +99,26 @@ def register(request):
             username = register_form.cleaned_data['username']
             password1 = register_form.cleaned_data['password1']
             password2 = register_form.cleaned_data['password2']
-            email = register_form.cleaned_data['email']
+            tel = register_form.cleaned_data['tel']
             sex = register_form.cleaned_data['sex']
             if password1 != password2:  # 判断两次密码是否相同
                 message = "两次输入的密码不同！"
                 return render(request, 'customer/register.html', locals())
             else:
-                same_name_user = models.User.objects.get(name=username)
+                same_name_user = models.User.objects.filter(uname=username)
                 if same_name_user:  # 用户名唯一
                     message = '用户已经存在，请重新选择用户名！'
                     return render(request, 'customer/register.html', locals())
-                same_email_user = models.User.objects.get(email=email)
-                if same_email_user:  # 邮箱地址唯一
-                    message = '该邮箱地址已被注册，请使用别的邮箱！'
-                    return render(request, 'customer/register.html', locals())
+
+
 
                 # 当一切都OK的情况下，创建新用户
 
                 new_user = models.User.objects.create()
-                new_user.name = username
+                new_user.uname = username
                 new_user.password = password1  # 使用加密密码
-                new_user.email = email
-                new_user.sex = sex
+                new_user.tel = tel
+                new_user.sex= sex
                 new_user.save()
                 return redirect('/bxxt/customer/login/')  # 自动跳转到登录页面
     register_form = RegisterForm()
@@ -130,7 +141,8 @@ def business(request):
     """
     docstring
     """
-    user = User(uid='arstdhneio', uname='UNGGOY', tel='18201529287', money=1000, age=24, address='beijing')
+    uid = request.session["user_id"]
+    user = models.User.objects.get(uid=uid)
     context = {'User': user}
     return render(request, 'customer/business.html', context)
 
