@@ -1,6 +1,6 @@
 import hashlib
 from decimal import Decimal
-
+from django.http.request import QueryDict
 from django.shortcuts import render, redirect, get_list_or_404
 
 from django.shortcuts import render, get_object_or_404
@@ -67,15 +67,15 @@ def account(request):
     """
     # user=User(uid='arstdhneio',uname='UNGGOY',tel='18201529287',money=1000,age=24,address='beijing')
     user = models.User.objects.get(uid=request.session['user_id'])
-    if user.sex == "1":
-        user.sex = "男"
-    else:
-        user.sex = "女"
+    # if user.sex == "1":
+    #     user.sex = "男"
+    # else:
+    #     user.sex = "女"
     context = {'User': user}
 
     if request.method == "POST":
-        tel = request.POST.get('phonenubmer',None)
-        province = request.POST.get('province',None)
+        tel = request.POST.get('phonenubmer', None)
+        province = request.POST.get('province', None)
         print(tel)
         print(province)
 
@@ -85,6 +85,20 @@ def account(request):
 
 
     return render(request, 'customer/account.html', context)
+
+
+def account_update(request):
+    uid = request.session["user_id"]
+    user = models.User.objects.get(uid=uid)
+    tel = request.POST.get('tel')
+    address = request.POST.get('address')
+    if tel:
+        user.tel = tel
+    if address:
+        user.address = address
+    user.save()
+    context = {'User': user}
+    return render(request, "customer/account.html",context)
 
 
 # 注册模块
@@ -170,7 +184,7 @@ def records(request, apply_id):
     user = models.User.objects.get(uid=request.session['user_id'])
     latest_record_list = models.Record.objects.filter(aid__id=apply_id)
     context = {'User': user, 'latest_record_list': latest_record_list}
-
+    print(type(latest_record_list))
     return render(request, 'customer/records.html', context)
 
 
