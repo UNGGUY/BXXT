@@ -3,7 +3,7 @@
 
 
 
-{% block title %}SEARCH{% endblock %}
+{% block title %}RECORDS{% endblock %}
 {% block css %}
 <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
 {% endblock %}
@@ -46,7 +46,7 @@
     </table>
 
     <div style="text-align:center;margin-top: 5%;">
-        <a href="#" class="btn btn-primary col-2">ADD RECORD</a>
+        <a href="/bxxt/customer/addrecord/{{apply_id}}" class="btn btn-primary col-2">ADD RECORD</a>
     </div>
 
     {% else %}

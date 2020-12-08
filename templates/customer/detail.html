@@ -4,7 +4,7 @@
 
 
 
-{% block title %}SEARCH{% endblock %}
+{% block title %}DETAIL{% endblock %}
 
 {% block css %}
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
@@ -14,15 +14,15 @@
 
 
 {% block content %}
-    <div class="container" style="max-width: 80%;">
+    <div class="container">
         {% if detail.rid.aid.astatus == '0'%}
         <!--        编辑按钮-->
         <div style="text-align:left;margin-top: 10px;margin-bottom: 10px">
-            <a href="#" class="btn btn-primary col-2">EDIT</a>
+            <a href="/bxxt/customer/edit/{{detail.id}}" class="btn btn-primary col-2">EDIT</a>
         </div>
         {% elif detail.rid.aid.astatus == '2' and detail.dstatus == '-1'%}
         <div style="text-align:left;margin-top: 10px;margin-bottom: 10px">
-            <a href="#" class="btn btn-primary col-2">EDIT</a>
+            <a href="/bxxt/customer/edit/{{detail.id}}" class="btn btn-primary col-2">EDIT</a>
         </div>
         {% endif %}
         <ul class="list-group list-group-flush">
@@ -47,8 +47,8 @@
             </li>
 
         </ul>
-        <div class="text-center">
-            <img src="{{ MEDIA_URL}}{{detail.folder}}"  class="img-fluid" alt="detail image">
+        <div>
+            <img src="{{ MEDIA_URL}}{{detail.folder}}"  class="img-thumbnail" alt="detail image" style="max-width: 40%; height: auto;">
         </div>
 
     </div>

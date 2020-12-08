@@ -169,7 +169,7 @@ def records(request, apply_id):
     """
     user = models.User.objects.get(uid=request.session['user_id'])
     latest_record_list = models.Record.objects.filter(aid__id=apply_id)
-    context = {'User': user, 'latest_record_list': latest_record_list}
+    context = {'User': user, 'latest_record_list': latest_record_list,'apply_id':apply_id}
 
     return render(request, 'customer/records.html', context)
 
@@ -297,3 +297,23 @@ def confirm(request, apply_id):
     return redirect('/bxxt/customer/applys/')
 
 
+
+
+def edit(request,detail_id):
+    """
+    docstring
+    """
+    detail=models.Detail.objects.get(id=detail_id)
+    
+    context = {
+        'detail':detail
+    }
+
+    return render(request,'customer/edit.html',context)
+
+
+def addrecord(request,record_id):
+    """
+    docstring
+    """
+    return render(request,'customer/addrecord.html')
