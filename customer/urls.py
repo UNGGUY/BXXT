@@ -27,4 +27,8 @@ urlpatterns = [
 
     path('documents/<int:apply_id>/', views.documents, name='documents'),
 
+    path('edit/<int:detail_id>/',views.edit,name='edit'),
+
+    path('addrecord/<int:apply_id>',views.addrecord,name='addrecord')
+
 ]

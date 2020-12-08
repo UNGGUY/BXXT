@@ -91,25 +91,23 @@
 
     <hr class="my-5">
     {% endfor %}
-    <table class="myTable">
-        <tbody>
-        <tr>
-            <th style="text-align: left;font-size: x-large" >&nbsp;&nbsp;&nbsp;&nbsp;合计金额:&nbsp;&nbsp;{{amount}}</th>
-        </tr>
-        </tbody>
-    </table>
-    <h4>&nbsp;</h4>
-    <table class="myTable">
-        <tbody>
 
-        <tr>
-            <th width="20%">财务处审核签章</th>
-            <td width="12.5%"></td>
-            <th width="30%">公疗办医生审核签章</th>
-            <td width="12.5%"></td>
-            <th>报销人</th>
-            <td width="12.5%"></td>
-        </tr>
+    <table class="myTable">
+        <tbody>
+            <tr>
+                <th width="20%">合计金额:{{amount}}</th>
+            </tr>
+            <tr>
+                <th>&nbsp;</th>
+            </tr>
+            <tr>
+                <th width="20%">财务处审核签章</th>
+                <td width="12.5%"></td>
+                <th width="20%">公疗办医生审核签章</th>
+                <td width="12.5%"></td>
+                <th>报销人</th>
+                <td width="12.5%"></td>
+            </tr>
         </tbody>
     </table>
     {% else %}

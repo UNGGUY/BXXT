@@ -5,7 +5,7 @@
 <html>
 
 
-{% block title %}SEARCH{% endblock %}
+{% block title %}APPLYS{% endblock %}
 {% block css %}
 <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
 {% endblock %}
@@ -33,17 +33,7 @@
                     {{apply.atime}}
                 </td>
                 <td>
-                    {% if apply.astatus == '0' %}
-                    <p>Submit</p>
-                    {% elif apply.astatus == '1' %}
-                    <p>Applying</p>
-                    {% elif apply.astatus == '2' %}
-                    <p>Confirm</p>
-                    {% elif apply.astatus == '3' %}
-                    <p>Unfinish</p>
-                    {% else %}
-                    <p>Finished</p>
-                    {% endif %}
+                    <p>{{apply.get_astatus_display}}</p>
                 </td>
                 <td>
                     <a href="/bxxt/customer/records/{{apply.id}}">Records</a>
