@@ -1,0 +1,50 @@
+
+{% load static %}
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>LOGIN</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+</head>
+
+<body>
+    <div class="container" style="width: 20%;">
+        <form class='form-login' action="/bxxt/customer/login/" method="post">
+
+
+            {% if message %}
+            <div class="alert alert-warning">{{ message }}</div>
+            {% endif %}
+
+            {% csrf_token %}
+            <h2 class="text-center" style="color: #ffc107">Welcome to sign in!</h2>
+
+
+            <div class="form-group">
+                {{ login_form.username.label_tag }}
+                {{ login_form.username}}
+            </div>
+            <div class="form-group">
+                {{ login_form.password.label_tag }}
+                {{ login_form.password }}
+            </div>
+
+            <div align="center">
+                <button type="reset" class="btn btn-default pull-left">RESET</button>
+                <button type="submit" class="btn btn-primary pull-right">SUBMIT</button>
+            </div>
+
+        </form>
+    </div> <!-- /container -->
+
+    <script src="{% static 'jquery/jquery-3.5.1.min.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+
+</body>
+
+
+
+</html>

@@ -33,6 +33,9 @@ urlpatterns = [
     path('documents/<int:apply_id>/', views.documents, name='documents'),
 
 
-
-
+    # STAFF
+    path('staff/login/',views.stafflogin,name='stafflogin'),
+    path('staff/applys/',views.staffapplys,name='staffapplys'),
+    path('staff/records/<int:apply_id>/',views.staffrecords,name='staffrecords'),
+    path('staff/cheak/',views.staffcheak,name='staffcheak'),
 ]

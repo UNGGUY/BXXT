@@ -23,5 +23,6 @@ urlpatterns = [
     # path('admin/', admin.site.urls),
     path('xadmin/', xadmin.site.urls),
     path('bxxt/customer/', include('customer.urls')),
+    path('bxxt/',include('customer.urls')),
     re_path(r'media/(?P<path>.*)$', serve, {'document_root':settings.MEDIA_ROOT}),
 ]
