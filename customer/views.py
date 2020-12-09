@@ -491,3 +491,45 @@ def applys_new(request):
         apply.save()
     return records_insert(request, apply.id)
 
+
+
+
+# STAFF
+
+def stafflogin(request):
+    """
+    docstring
+    """
+    return render(request,'staff/login.html')
+
+
+def staffapplys(request):
+    """
+    docstring
+    """
+
+    latest_apply_list = models.Apply.objects.filter(Q(astatus='1'))
+    context = {'latest_apply_list': latest_apply_list}
+    return render(request, 'staff/applys.html', context)
+
+
+def staffrecords(request,apply_id):
+    """
+    docstring
+    """
+    latest_record_list = models.Record.objects.filter(aid__id=apply_id)
+
+    latest_detail_list= list()
+
+    for record in latest_record_list:
+        latest_detail_list.extend(models.Detail.objects.filter(rid__id=record.id))
+
+    context = {'latest_detail_list': latest_detail_list}
+    return render(request,'staff/records.html',context)
+
+
+def staffcheak(request):
+    """
+    docstring
+    """
+    return render(request,'staff/cheak.html')
