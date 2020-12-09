@@ -155,7 +155,7 @@ class Apply(models.Model):
 class Record(models.Model):
     """报销记录表"""
     aid = models.ForeignKey(Apply, on_delete=models.CASCADE, verbose_name=u"申请编号")  # 申请编号aid
-    rid = models.CharField('记录编号', max_length=10)  # 编号rid
+    rid = models.CharField('记录编号', max_length=20)  # 编号rid
     rtime = models.DateField('修改时间', auto_now=True, auto_now_add=False)  # 最后修改时间rtime
     money = models.DecimalField('金额', max_digits=8, decimal_places=2, default=0.00)  # 金额money 6位.2位
     money_bx = models.DecimalField('可报销金额', max_digits=8, decimal_places=2, default=0.00)  # 可报销金额money 6位.2位
