@@ -17,6 +17,7 @@ urlpatterns = [
     path('applys/undo/<int:apply_id>/', views.undo, name='undo'),
     path('applys/submit/<int:apply_id>/', views.submit, name='submit'),
     path('applys/confirm/<int:apply_id>/', views.confirm, name='confirm'),
+    path('applys/new/', views.applys_new, name='applys_new'),
 
     path('records/<int:apply_id>/', views.records, name='records'),
     path('records/delete/<int:record_id>/', views.records_delete, name='records_delete'),

@@ -303,6 +303,7 @@ def submit(request, apply_id):
         record.money = count
         record.money_bx = count
         record.save()
+    apply.atime = datetime.datetime.now()
     apply.save()
     return redirect('/bxxt/customer/applys/')
 
@@ -469,3 +470,24 @@ def make_rid(uid):
     else:
         rid = rid_start + '001'
         return rid
+
+
+def applys_new(request):
+    tr_file = request.FILES.get('tr_image')
+    re_file = request.FILES.get('re_image')
+    in_file = request.FILES.get('in_image')
+    if tr_file or re_file or in_file:
+        # 生成apply : aid astatus uid
+        aid = datetime.datetime.now().strftime('%Y%m%d%H%M%S')[-12:]
+        applys = models.Apply.objects.filter(aid__startswith=aid).order_by('-aid')
+        if applys:
+            aid += str(int(applys.first().rid[-5:]) + 1).zfill(5)
+        else:
+            aid += '00001'
+        user = models.User.objects.get(uid=request.session['user_id'])
+        print(aid)
+        apply = Apply(aid=aid, astatus='0', uid=user)
+        # 新建record
+        apply.save()
+    return records_insert(request, apply.id)
+
