@@ -16,33 +16,52 @@
 
 
 <div class="container" style="margin-top: 3%;">
-    <form>
+    <form action="/bxxt/customer/records/add/{{apply_id}}/" method="post" enctype="multipart/form-data"
         <h3>TRANRFER</h3>
+    {% csrf_token %}
         <div class="form-group">
-            <label for="tr_hospital">HOSPITAL NAME</label>
+            <label for="tr_no">NO</label>
 
-            <input type="text" class="form-control" name="tr_hospital" id="tr_hospital">
+            <input type="text" class="form-control" name="tr_no" id="tr_no">
         </div>
         <div class="form-group">
-            <label for="tr_department">DEPARTMENT NAME</label>
-            <input type="text" class="form-control" name="tr_department" id="tr_department" >
+            <label for="tr_hname">HOSPITAL NAME</label>
+
+            <input type="text" class="form-control" name="tr_hname" id="tr_hname" onchange="change_h(this.value)">
+        </div>
+        <div class="form-group">
+            <label for="tr_sname">DEPARTMENT NAME</label>
+            <input type="text" class="form-control" name="tr_sname" id="tr_sname" onchange="change_s(this.value)" >
+        </div>
+        <div class="form-group">
+            <label for="tr_date">DATE</label>
+            <input type="date" class="form-control" name="tr_date" id="tr_date" onchange="change_d(this.value)">
         </div>
         <div class="form-group">
             <label for="tr_image">TRANRFER IMAGE</label>
             <input type="file" class="form-control-file" name="tr_image" id="tr_image" onchange="tr_changepic(this)">
         </div>
         <div class="form-group">
-            <img src=""  class="img-thumbnail" alt="detail image" id="tr_image_show" style="max-width: 40%; height: auto;" onerror="this.style.display='none'">
+            <img src=""  class="img-thumbnail" alt="detail image" id="tr_image_show" style="max-width: 40%; height: auto;"
+                 onerror="this.style.display='none'">
         </div>
         <hr class="my-4">
         <h3>REGISTRATION</h3>
         <div class="form-group">
-            <label for="re_hospital">HOSPITAL NAME</label>
-            <input type="text" class="form-control" name="re_hospital" id="re_hospital">
+            <label for="re_no">NO</label>
+            <input type="text" class="form-control" name="re_no" id="re_no">
         </div>
         <div class="form-group">
-            <label for="re_department">DEPARTMENT NAME</label>
-            <input type="text" class="form-control" name="re_department" id="re_department">
+            <label for="re_hname">HOSPITAL NAME</label>
+            <input type="text" class="form-control" name="re_hname" id="re_hname" onchange="change_h(this.value)">
+        </div>
+        <div class="form-group">
+            <label for="re_sname">DEPARTMENT NAME</label>
+            <input type="text" class="form-control" name="re_sname" id="re_sname" onchange="change_s(this.value)">
+        </div>
+        <div class="form-group">
+            <label for="re_date">DATE</label>
+            <input type="date" class="form-control" name="re_date" id="re_date" onchange="change_d(this.value)">
         </div>
         <div class="form-group">
             <label for="re_fee">REGISTRATION FEE</label>
@@ -50,20 +69,30 @@
         </div>
         <div class="form-group">
             <label for="re_image">REGISTRATION IMAGE</label>
-            <input type="file" class="form-control-file" name="re_image" id="re_image" onchange="re_changepic(this)">
+            <input type="file" class="form-control-file" name="re_image" id="re_image"
+                   onchange="re_changepic(this)">
         </div>
         <div class="form-group">
-            <img src=""  class="img-thumbnail" alt="detail image" id="re_image_show" style="max-width: 40%; height: auto;" onerror="this.style.display='none'">
+            <img src=""  class="img-thumbnail" alt="detail image" id="re_image_show" style="max-width: 40%; height: auto;"
+                 onerror="this.style.display='none'">
         </div>
         <hr class="my-4">
         <h3>INVOICE</h3>
         <div class="form-group">
-            <label for="in_hospital">HOSPITAL NAME</label>
-            <input type="text" class="form-control" name="in_hospital" id="in_hospital">
+            <label for="in_no">NO</label>
+            <input type="text" class="form-control" name="in_no" id="in_no">
         </div>
         <div class="form-group">
-            <label for="in_department">DEPARTMENT NAME</label>
-            <input type="text" class="form-control" name="in_department" id="in_department">
+            <label for="in_hname">HOSPITAL NAME</label>
+            <input type="text" class="form-control" name="in_hname" id="in_hname" onchange="change_h(this.value)">
+        </div>
+        <div class="form-group">
+            <label for="in_sname">DEPARTMENT NAME</label>
+            <input type="text" class="form-control" name="in_sname" id="in_sname" onchange="change_s(this.value)">
+        </div>
+        <div class="form-group">
+            <label for="in_date">DATE</label>
+            <input type="date" class="form-control" name="in_date" id="in_date" onchange="change_d(this.value)">
         </div>
         <div class="form-group">
             <label for="in_fee">FEE</label>
@@ -71,13 +100,16 @@
         </div>
         <div class="form-group">
             <label for="in_image">INVOICE IMAGE</label>
-            <input type="file" class="form-control-file" name="" id="in_image" onchange="in_changepic(this)">
+            <input type="file" class="form-control-file" name="in_image"  id="in_image" onchange="in_changepic(this)">
         </div>
         <div class="form-group">
-            <img src=""  class="img-thumbnail" alt="detail image" id="in_image_show" style="max-width: 40%; height: auto;" onerror="this.style.display='none'">
+            <img src=""  class="img-thumbnail" alt="detail image" id="in_image_show" style="max-width: 40%; height: auto;"
+                 onerror="this.style.display='none'">
         </div>
         <div class="form-group" style="margin:4% 0 4%;">
             <button type="submit" id="submit" class="btn btn-primary col-3">SAVE</button>
+            <button type="button" id="cancel" class="btn btn-primary col-3"
+                    onclick="location='/bxxt/customer/records/{{apply_id}}'">BACK</button>
         </div>
     </form>
 </div>
@@ -120,6 +152,26 @@
             document.getElementById('in_image_show').src=this.result;
         };
     }
+
+    function  change_h(obj){
+        $('#tr_hname').val(obj);
+        $('#re_hname').val(obj);
+        $('#in_hname').val(obj);
+    }
+
+    function  change_s(obj){
+        $('#tr_sname').val(obj);
+        $('#re_sname').val(obj);
+        $('#in_sname').val(obj);
+    }
+
+    function  change_d(obj){
+        $('#tr_date').val(obj);
+        $('#re_date').val(obj);
+        $('#in_date').val(obj);
+    }
+
+
 </script>
 
 

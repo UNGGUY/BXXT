@@ -41,20 +41,55 @@
                         {% endif %}
                     </td>
                     <td>
-                        {% if detail.money_bx == 0%}
-                            --
-                        {% else %}
+                        {% if detail.rid.aid.astatus == '2' or detal.rid.aid.astatus == '3'%}
                             {{detail.money_bx}}
+                        {% else %}
+                            --
                         {% endif %}
+
                     </td>
                     <td>{{detail.get_dstatus_display}}</td>
                     <td>
                         <a href="/bxxt/customer/detail/{{detail.id}}">Detail</a>
+                        {% if detail.rid.aid.astatus == '0' or detail.dstatus == '-1' %}
+                        &nbsp;&nbsp;
+                        <a href="#"  data-toggle="modal" data-target="#layer{{detail.id}}">Delete</a>
+                    <div class="container">
+                        <!--模态框 弹出框-->
+                        <div role="dialog" class="modal fade bs-example-modal-sm" id="layer{{detail.id}}">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">
+                                            <span>&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form>
+                                            <div class="form-group" style="text-align: center">
+                                                <label  class="control-label">确定要删除记录吗？</label>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
+                                        <button type="button" class="btn btn-primary"
+                                                onclick="location='/bxxt/customer/detail/delete/{{detail.id}}'">确认
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+        <div style="text-align:center;margin-top: 5%;">
+            <a href="/bxxt/customer/records/{{latest_detail_list.first.rid.aid.id}}" class="btn btn-primary col-2">BACK</a>
+        </div>
         {% else %}
         <p>NO REIMBURSEMENT ARE AVAILABLE.</p>
         {% endif %}

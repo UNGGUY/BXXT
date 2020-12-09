@@ -15,16 +15,15 @@
 
 {% block content %}
     <div class="container">
+        <div style="text-align:left;margin-top: 10px;margin-bottom: 10px">
         {% if detail.rid.aid.astatus == '0'%}
         <!--        编辑按钮-->
-        <div style="text-align:left;margin-top: 10px;margin-bottom: 10px">
-            <a href="/bxxt/customer/edit/{{detail.id}}" class="btn btn-primary col-2">EDIT</a>
-        </div>
+            <a href="/bxxt/customer/detail/edit/{{detail.id}}" class="btn btn-primary col-2">EDIT</a>
         {% elif detail.rid.aid.astatus == '2' and detail.dstatus == '-1'%}
-        <div style="text-align:left;margin-top: 10px;margin-bottom: 10px">
-            <a href="/bxxt/customer/edit/{{detail.id}}" class="btn btn-primary col-2">EDIT</a>
-        </div>
+            <a href="/bxxt/customer/detail/edit/{{detail.id}}" class="btn btn-primary col-2">EDIT</a>
         {% endif %}
+            <a href="/bxxt/customer/details/{{detail.rid.id}}" class="btn btn-primary col-2">BACK</a>
+        </div>
         <ul class="list-group list-group-flush">
             <li class="list-group-item list-group-item-primary">{{ detail.get_type_display }}</li>
             <li class="list-group-item">{{detail.did}}</li>
@@ -33,7 +32,9 @@
             <li class="list-group-item">{{detail.sname}}</li>
             {% if detail.money != 0 %}
             <li class="list-group-item">{{detail.money}}</li>
-            <li class="list-group-item">{{detail.money_bx}}</li>
+                {% if detail.rid.aid.astatus == '2' %}
+                    <li class="list-group-item">{{detail.money_bx}}</li>
+                {% endif %}
             {% endif %}
             {% if detail.rid.aid.astatus != '0' %}
             <li class="list-group-item">{{detail.get_dstatus_display}}</li>

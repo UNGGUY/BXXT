@@ -20,15 +20,19 @@ urlpatterns = [
 
     path('records/<int:apply_id>/', views.records, name='records'),
     path('records/delete/<int:record_id>/', views.records_delete, name='records_delete'),
+    path('addrecord/<int:apply_id>',views.addrecord, name='addrecord'),
+    path('records/add/<int:apply_id>/', views.records_insert, name='records_insert'),
 
     path('details/<int:record_id>/', views.details, name='details'),
 
     path('detail/<int:detail_id>/', views.detail, name='detail'),
+    path('detail/edit/<int:detail_id>/', views.detail_edit, name='detail_edit'),
+    path('detail/update/<int:detail_id>/', views.detail_update, name='detail_update'),
+    path('detail/delete/<int:detail_id>/', views.detail_delete, name='detail_delete'),
 
     path('documents/<int:apply_id>/', views.documents, name='documents'),
 
-    path('edit/<int:detail_id>/',views.edit,name='edit'),
 
-    path('addrecord/<int:apply_id>',views.addrecord,name='addrecord')
+
 
 ]

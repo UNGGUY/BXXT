@@ -178,7 +178,7 @@ class Detail(models.Model):
     dtime = models.DateField('时间', auto_now=False, auto_now_add=False)  # 时间
     choice=(
         ('0', '转诊单'),
-        ('1', '挂号费'),
+        ('1', '挂号单'),
         ('2', '发票'),
         ('3', '补充'),
     )

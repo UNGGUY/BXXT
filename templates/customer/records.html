@@ -71,12 +71,14 @@
             {% endfor %}
         </tbody>
     </table>
-
-    {% if latest_record_list.first.aid.astatus == '0' %}
     <div style="text-align:center;margin-top: 5%;">
+        {% if latest_record_list.first.aid.astatus == '0' %}
+
         <a href="/bxxt/customer/addrecord/{{apply_id}}" class="btn btn-primary col-2">ADD RECORD</a>
+
+        {% endif %}
+        <a href="/bxxt/customer/applys/" class="btn btn-primary col-2">BACK</a>
     </div>
-    {% endif %}
     {% else %}
     <p>NO RECORDS ARE AVAILABLE.</p>
     {% endif %}

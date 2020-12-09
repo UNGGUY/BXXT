@@ -1,8 +1,8 @@
 import hashlib
 from decimal import Decimal
-
+import os
 from django.shortcuts import render, redirect, get_list_or_404
-
+from BXXT import settings
 from django.shortcuts import render, get_object_or_404
 from customer.models import User, Detail, Apply, Record
 from django.db.models import Q, Sum, Count
@@ -173,6 +173,9 @@ def applys(request):
 
 
 def applys_delete(request, apply_id):
+    details = models.Detail.objects.filter(rid__aid=apply_id)
+    for detail in details:
+        os.remove(os.path.join(settings.MEDIA_ROOT, str(detail.folder)))
     models.Apply.objects.get(id=apply_id).delete()
     return redirect('/bxxt/customer/applys/')
 
@@ -183,13 +186,16 @@ def records(request, apply_id):
     """
     user = models.User.objects.get(uid=request.session['user_id'])
     latest_record_list = models.Record.objects.filter(aid__id=apply_id)
-    context = {'User': user, 'latest_record_list': latest_record_list,'apply_id':apply_id}
+    context = {'User': user, 'latest_record_list': latest_record_list, 'apply_id': apply_id}
 
     return render(request, 'customer/records.html', context)
 
 
 def records_delete(request, record_id):
     record = models.Record.objects.get(id=record_id)
+    details = models.Detail.objects.filter(rid_id=record_id)
+    for detail in details:
+        os.remove(os.path.join(settings.MEDIA_ROOT, str(detail.folder)))
     aid = record.aid.id
     record.delete()
     return redirect('/bxxt/customer/records/'+str(aid))
@@ -311,23 +317,144 @@ def confirm(request, apply_id):
     return redirect('/bxxt/customer/applys/')
 
 
-
-
-def edit(request,detail_id):
+def detail_edit(request, detail_id):
     """
     docstring
     """
-    detail=models.Detail.objects.get(id=detail_id)
-
+    detail_rs = models.Detail.objects.get(id=detail_id)
+    detail_rs.dtime = detail_rs.dtime.strftime("%Y-%m-%d")
     context = {
-        'detail':detail
+        'detail':detail_rs,
     }
-
     return render(request,'customer/edit.html',context)
 
 
-def addrecord(request,record_id):
+def detail_update(request, detail_id):
+    file = request.FILES.get('image')
+    post = request.POST
+    detail = models.Detail.objects.get(id=detail_id)
+    if file:
+        # 换名字 报销编号—凭证编号—类型名.后缀
+        file.name =detail.rid.rid+"_"+detail.did+"_"+detail.get_type_display()+os.path.splitext(file.name)[1]
+        #  删除原来的文件
+        os.remove(os.path.join(settings.MEDIA_ROOT, str(detail.folder)))
+        # 保存新文件
+        detail.folder = file
+    detail.did = post.get('did')
+    detail.hname = post.get('hname')
+    detail.sname = post.get('sname')
+    detail.dtime = post.get('date')
+
+    if detail.type == '1' or detail.type == '2':
+        detail.money = post.get('money')
+        detail.money_bx = post.get('money')
+    detail.save()
+    details = models.Detail.objects.filter(rid=detail.rid)
+    for obj in details:
+        if obj.type != '0':
+            obj.dtime = post.get('date')
+        obj.hname = post.get('hname')
+        obj.sname = post.get('sname')
+        obj.save()
+
+    context = {
+        'detail': detail
+    }
+
+    return redirect('/bxxt/customer/detail/'+str(detail_id))
+
+
+def detail_delete(request, detail_id):
     """
     docstring
     """
-    return render(request,'customer/addrecord.html')
+    detail = models.Detail.objects.get(id=detail_id)
+    os.remove(os.path.join(settings.MEDIA_ROOT, str(detail.folder)))
+    rid = detail.rid_id
+    detail.delete()
+    return redirect('/bxxt/customer/details/'+str(rid))
+
+
+def addrecord(request, apply_id):
+    """
+    docstring
+    """
+    context = {
+        'apply_id': apply_id
+    }
+    return render(request,'customer/addrecord.html', context)
+
+
+def records_insert(request, apply_id):
+    tr_file = request.FILES.get('tr_image')
+    re_file = request.FILES.get('re_image')
+    in_file = request.FILES.get('in_image')
+    if tr_file or re_file or in_file:
+        tr_detail = Detail()
+        re_detail = Detail()
+        in_detail = Detail()
+        post = request.POST
+        # 创建Record
+        rid = make_rid(models.User.objects.get(uid=request.session['user_id']).id)
+        record = Record(rid=rid, aid=models.Apply.objects.get(id=apply_id))
+        money = 0
+        # 创建Details
+        if tr_file:
+            # 转诊单
+            tr_detail.rid = record
+            tr_detail.did = post.get('tr_no')
+            tr_detail.hname = post.get('tr_hname')
+            tr_detail.sname = post.get('tr_sname')
+            # 换名字 报销编号—凭证编号—类型名.后缀
+            tr_file.name = rid+"_"+tr_detail.did+"_"+'转诊单'+os.path.splitext(tr_file.name)[1]
+            # 保存新文件
+            tr_detail.folder = tr_file
+        if re_file:
+            # 挂号费
+            re_detail.rid = record
+            re_detail.did = post.get('re_no')
+            re_detail.hname = post.get('re_hname')
+            re_detail.sname = post.get('re_sname')
+            re_detail.money = post.get('re_money')
+            re_detail.money_bx = re_detail.money
+            money += re_detail.money
+            # 换名字 报销编号—凭证编号—类型名.后缀
+            re_file.name = rid + "_" + re_detail.did + "_" + '转诊单' + os.path.splitext(re_file.name)[1]
+            # 保存新文件
+            re_detail.folder = re_file
+        if in_file:
+            # 发票
+            in_detail.rid = record
+            in_detail.did = post.get('in_no')
+            in_detail.hname = post.get('in_hname')
+            in_detail.sname = post.get('in_sname')
+            in_detail.money = post.get('in_money')
+            in_detail.money_bx = in_detail.money
+            money += in_detail.money
+            # 换名字 报销编号—凭证编号—类型名.后缀
+            in_file.name = rid + "_" + in_detail.did + "_" + '转诊单' + os.path.splitext(in_file.name)[1]
+            # 保存新文件
+            in_detail.folder = in_file
+
+    # 计算总金额
+    record.money = Decimal(money.quantize(Decimal('0.00')))
+    record.money_bx = record.money
+    record.save()
+    if tr_detail:
+        tr_detail.save()
+    if re_detail:
+        re_detail.save()
+    if in_detail:
+        in_detail.save()
+    return redirect("/bxxt/customer/records/"+str(apply_id))
+
+
+def make_rid(uid, ):
+    rid_start = datetime.date.today().strftime('%Y%m%d') + str(uid).zfill(5)
+    records = models.Record.objects.filter(rid__startswith=rid_start).order_by('-rid')
+    if records:
+        rid = rid_start + str(int(records.first().rid[-3:]) + 1).zfill(3)
+        return rid
+    else:
+        rid = rid_start + '001'
+        return rid

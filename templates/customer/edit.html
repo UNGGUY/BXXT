@@ -17,19 +17,33 @@
 
 <div class="container" style="margin-top: 3%;">
     {% if detail %}
-    <form>
+    <form action="/bxxt/customer/detail/update/{{detail.id}}/" method="post" enctype="multipart/form-data">
         <h3>
             {{detail.get_type_display}}
         </h3>
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="No">NO</label>
+            <input type="text" class="form-control" name="did" id="No" value="{{detail.did}}">
+        </div>
         <div class="form-group">
             <label for="hospital">HOSPITAL NAME</label>
-
-            <input type="text" class="form-control" name="hospital" id="hospital" value="{{detail.hname}}">
+            <input type="text" class="form-control" name="hname" id="hospital" value="{{detail.hname}}">
         </div>
         <div class="form-group">
             <label for="department">DEPARTMENT NAME</label>
-            <input type="text" class="form-control" name="department" id="department" value="{{detail.sname}}">
+            <input type="text" class="form-control" name="sname" id="department" value="{{detail.sname}}">
         </div>
+        <div class="form-group">
+            <label for="date">DATE</label>
+            <input type="date" class="form-control" name="date" id="date" value="{{detail.dtime}}">
+        </div>
+        {% if detail.type == '1' or detail.type == '2' %}
+        <div class="form-group">
+            <label for="money">COST</label>
+            <input type="number" class="form-control" name="money" id="money" value="{{detail.money}}" step="0.01">
+        </div>
+        {% endif %}
         <div class="form-group">
             <label for="image">IMAGE</label>
             <input type="file" class="form-control-file" name="image" id="image" onchange="changepic(this)">
@@ -39,6 +53,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="button" class="btn btn-primary" onclick="location='/bxxt/customer/detail/{{detail.id}}'">CancelL</button>
     </form>
     {% endif %}
 </div>
