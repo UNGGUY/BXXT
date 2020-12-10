@@ -1,0 +1,84 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>RECORD DETAILS</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#ff7f00;">
+        <div class="container" style="max-width: 80%;">
+            <a class="navbar-brand " href="/bxxt/customer/">
+                <h3>BXXT</h3>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    {% if request.session.is_login %}
+                    <li><a class="nav-link text-light">Online：{{ request.session.user_name }}</a> </li>
+                    <li><a class="nav-link text-light" href="/bxxt/staff/logout/">Log out</a> </li>
+                    {% else %}
+                    <li><a class="nav-link text-light" href="/bxxt/staff/login/">Sign in</a> </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="container">
+        {% if latest_detail_list %}
+        {% for detail in latest_detail_list %}
+        <ul class="list-group list-group-flush">
+
+            <li class="list-group-item list-group-item-primary">{{ detail.get_type_display }}</li>
+            <li class="list-group-item">Detail ID:{{detail.did}}</li>
+            <li class="list-group-item">Time:{{detail.dtime}}</li>
+            <li class="list-group-item">Hosptail Name:{{detail.hname}}</li>
+            <li class="list-group-item">Department Name:{{detail.sname}}</li>
+            <li class="list-group-item">Status:{{detail.get_dstatus_display}}</li>
+            <li class="list-group-item">Sum Money:{{detail.money}}</li>
+            <li class="list-group-item">Money:<input style="border: 0px;" type="text" name="money_bx"
+                    value="{{detail.money_bx}}"></li>
+            <li class="list-group-item">
+                {% if detail.msg == None %}
+                Message:无
+                {% else%}
+                Message:<input style="border: 0px;" type="text" name="message" value="{{detail.msg}}">
+                {% endif %}
+            </li>
+            <li class="list-group-item">
+                <div>
+                    <img src="{{ MEDIA_URL}}{{detail.folder}}" class="img-thumbnail" alt="detail image"
+                        style="max-width: 40%; height: auto;">
+                </div>
+            </li>
+        </ul>
+
+        {% endfor %}
+
+        <div style="margin-top: 5%;margin-bottom: 5%;">
+            <input class="btn btn-primary" type="button" name="Submit" value="BACK" style="width: 20%;" onclick="javascript:window.history.back(-1);">
+        </div>
+        {% else%}
+        <p>{{a}}</p>
+        {% endif %}
+
+        <script src="{% static 'jquery/jquery-3.5.1.min.js' %}"></script>
+        <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    </div>
+</body>
+
+
+
+</html>

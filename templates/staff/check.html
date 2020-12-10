@@ -1,11 +1,9 @@
 {% load static %}
-
-
 <!DOCTYPE html>
 <html>
 
 <head>
-    <title>APPLYS</title>
+    <title>CHECK</title>
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
 </head>
 
@@ -37,42 +35,14 @@
         </div>
     </nav>
 
-    {% if latest_apply_list %}
-    <div class="container" style="max-width: 80%;">
-        <table class="table">
-            <thead class="thead-dark">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">APPLY No.</th>
-                    <th scope="col">TIME APPLY</th>
-                    <th scope="col">STATUS</th>
-                    <th scope="col">DETAIL</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for apply in latest_apply_list %}
-                <tr>
-                    <th scope="row">{{forloop.counter}}</th>
-                    <td>{{apply.aid}}</td>
-                    <td>
-                        {{apply.atime}}
-                    </td>
-                    <td>
-                        <p>{{apply.get_astatus_display}}</p>
-                    </td>
-                    <td>
-                        <a href="/bxxt/staff/details/{{apply.id}}">DETAILS</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-        <p>NO APPLY ARE AVAILABLE.</p>
-        {% endif %}
+    <div class="container">
+        <div style="text-align: center; height: 500px; margin-top: 20%;">
+            <button type="button" class="btn btn-primary" style="width: 60%; height: 50%; font-size: xx-large;">ScanQRCode</button>
+        </div>
     </div>
     <script src="{% static 'jquery/jquery-3.5.1.min.js' %}"></script>
     <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+
 </body>
 
 
