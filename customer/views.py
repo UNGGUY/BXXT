@@ -519,7 +519,7 @@ def staffapplys(request):
     return render(request, 'staff/applys.html', context)
 
 
-def staffrecords(request,apply_id):
+def staffdetails(request,apply_id):
     """
     docstring
     """
@@ -528,14 +528,84 @@ def staffrecords(request,apply_id):
     latest_detail_list= list()
 
     for record in latest_record_list:
-        latest_detail_list.extend(models.Detail.objects.filter(rid__id=record.id))
+        latest_detail_list.extend(models.Detail.objects.filter(rid__id=record.id)) # 是否还要筛选一下dstatus
 
     context = {'latest_detail_list': latest_detail_list}
-    return render(request,'staff/records.html',context)
+    return render(request,'staff/details.html',context)
 
 
-def staffcheak(request):
+def staffcheck(request):
     """
     docstring
     """
-    return render(request,'staff/cheak.html')
+    return render(request,'staff/check.html')
+
+
+
+def staffqrcode(request):
+    """
+    docstring
+    """
+    u_id=request.GET.get('uid')
+    a_id=request.GET.get('aid')
+    user = models.User.objects.get(id=u_id)
+    details = models.Detail.objects.filter(Q(rid__aid=a_id) & Q(dstatus='1') & Q(type='1')).\
+        aggregate(sum=Sum('money'))
+    print(details['sum'])
+    records = models.Record.objects.filter(aid=a_id)
+    latest_document_list = list()
+    amount = 0
+    for record in records:
+        money_reg = models.Detail.objects.filter(Q(rid=record.id) & Q(dstatus='1') & Q(type='1')). \
+            aggregate(sum=Sum('money'), bx=Sum('money_bx'))
+        money_inv = models.Detail.objects.filter(Q(rid=record.id) & Q(dstatus='1') & Q(type='2')). \
+            aggregate(sum=Sum('money'), bx=Sum('money_bx'))
+        desum = models.Detail.objects.filter(Q(rid=record.id) & Q(dstatus='1')). count()
+        ratio = user.utype.ratio
+        if user.money >= user.utype.limit:
+            ratio += user.utype.change
+        if not money_reg['sum']:
+            money_reg['sum'] = 0
+        if not money_inv['sum']:
+            money_inv['sum'] = 0
+        if not money_reg['bx']:
+            money_reg['bx'] = 0
+        if not money_inv['bx']:
+            money_inv['bx'] = 0
+        document = {'aid': record.aid,
+                    'rid': record.rid,
+                    'dtime': models.Detail.objects.filter(rid=record.id)[0].dtime,
+                    'register': money_reg['sum'],
+                    'invoice': money_inv['sum'],
+                    'cost': money_reg['sum']+money_inv['sum'],
+                    'money': money_reg['bx']+money_inv['bx'],
+                    'ratio': str(ratio)+"%",
+                    'money_bx': Decimal((money_reg['bx']+money_inv['bx'])*ratio/100).quantize(Decimal('0.00')),
+                    'desum': desum
+                    }
+        latest_document_list.append(document)
+        amount +=Decimal((money_reg['bx']+money_inv['bx'])*ratio/100).quantize(Decimal('0.00'))
+
+    context = {'latest_document_list': latest_document_list,
+               'User': user,
+               'amount': amount,
+               }
+
+    return render(request, 'staff/qrcode.html', context)
+
+
+
+def staffrdetails(request,record_id):
+    """
+    docstring
+    """
+
+    latest_detail_list=models.Detail.objects.filter(rid=record_id)
+
+    context={
+        'latest_detail_list':latest_detail_list
+    }
+
+    return render(request,'staff/r_details.html',context) 
+
+

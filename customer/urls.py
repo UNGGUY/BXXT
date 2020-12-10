@@ -37,6 +37,10 @@ urlpatterns = [
     # STAFF
     path('staff/login/',views.stafflogin,name='stafflogin'),
     path('staff/applys/',views.staffapplys,name='staffapplys'),
-    path('staff/records/<int:apply_id>/',views.staffrecords,name='staffrecords'),
-    path('staff/cheak/',views.staffcheak,name='staffcheak'),
+    path('staff/details/<int:apply_id>/',views.staffdetails,name='staffdetails'),
+    path('staff/check/',views.staffcheck,name='staffcheck'),
+    path('staff/qrcode/',views.staffqrcode,name='staffqrcode'),
+    path('staff/r_details/<int:record_id>/',views.staffrdetails,name='staffrdetails'),
+
+
 ]

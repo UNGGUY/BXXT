@@ -29,11 +29,17 @@
 
 {% block content %}
 
-<!--startprint-->
-{% if latest_document_list and User %}
 
 <div class="container" style="max-width: 80; margin-top: 2%;">
+    {% if latest_document_list and User %}
+    <div style="text-align: center;">
+        <div style="height: 70px;">
+            <h1>REIMBURSEMENT FORM<img style="float: right; height: 70px; width: auto;" src="/refundproof/qrcode/afb715ae61584abea32b35686cdf75e8.png"></h1>
+        </div>
+    </div>
     {% for document in latest_document_list %}
+
+
     <table class="myTable">
         <tbody>
             <tr>
@@ -41,8 +47,6 @@
                 <td width="20%">{{document.aid}}</td>
                 <th width="10%">报销号：</th>
                 <td width="20%">{{document.rid}}</td>
-                <th width="25%" rowspan="3"><img src="/media/QRcode/{{QRcode}}"
-                        alt="UIBE报销二维码"></th>
             </tr>
             <tr>
                 <th width="15%">姓&nbsp;&nbsp;&nbsp;名：</th>
@@ -72,7 +76,7 @@
                 <td width="12.5%">
                     {{document.money}}
                 </td>
-                <th width="12.5%"><a href="../showRecord/afb715ae61584abea32b35686cdf75e8">凭证数</a></th>
+                <th width="12.5%">凭证数</th>
                 <td width="7%">{{document.desum}}</td>
             </tr>
             <tr>
