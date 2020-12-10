@@ -1,6 +1,8 @@
 import hashlib
 from decimal import Decimal
 import os
+
+from MyQR import myqr
 from django.shortcuts import render, redirect, get_list_or_404
 from BXXT import settings
 from django.shortcuts import render, get_object_or_404
@@ -238,7 +240,6 @@ def documents(request, apply_id):
     user = models.User.objects.get(uid=request.session['user_id'])
     details = models.Detail.objects.filter(Q(rid__aid=apply_id) & Q(dstatus='1') & Q(type='1')).\
         aggregate(sum=Sum('money'))
-    print(details['sum'])
     records = models.Record.objects.filter(aid=apply_id)
     latest_document_list = list()
     amount = 0
@@ -272,11 +273,15 @@ def documents(request, apply_id):
                     }
         latest_document_list.append(document)
         amount +=Decimal((money_reg['bx']+money_inv['bx'])*ratio/100).quantize(Decimal('0.00'))
-
+    apply = models.Apply.objects.get(id=apply_id)
+    if not os.path.exists('media/QRcode/'+apply.aid+'.png'):
+        # words传递参数，扫描二维码后获取并添加至url后
+        myqr.run(words='uid='+str(user.id)+'&aid='+str(apply_id), save_name=apply.aid+'.png', save_dir='media/QRcode/')
     context = {'latest_document_list': latest_document_list,
-               'User': user,
-               'amount': amount,
-               }
+                'User': user,
+                'amount': amount,
+                'QRcode': apply.aid+'.png'
+                }
 
     return render(request, 'customer/documents.html', context)
 
