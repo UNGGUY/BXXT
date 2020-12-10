@@ -29,8 +29,8 @@
 
 {% block content %}
 
-
-{% if latest_document_list and User %}}
+<!--startprint-->
+{% if latest_document_list and User %}
 
 <div class="container" style="max-width: 80; margin-top: 2%;">
     {% for document in latest_document_list %}
@@ -114,8 +114,23 @@
     <p>NO RECORDS ARE AVAILABLE.</p>
     {% endif %}
 </div>
-
-
+<!--endprint-->
 <script src="{% static 'jquery/jquery-3.5.1.min.js' %}"></script>
 <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+<script>
+    function my_print()
+    {
+        //直接调用浏览器打印功能
+        bdhtml=window.document.body.innerHTML;
+        //定义打印区域起始字符，根据这个截取网页局部内容
+        sprnstr="<!--startprint-->"; //打印区域开始的标记
+        eprnstr="<!--endprint-->";   //打印区域结束的标记
+        prnhtml=bdhtml.substr(bdhtml.indexOf(sprnstr)+17);
+        prnhtml=prnhtml.substring(0,prnhtml.indexOf(eprnstr));
+        //还原网页内容
+        window.document.body.innerHTML=prnhtml;
+        //开始打印
+        window.print();
+    }
+</script>
 {% endblock %}
