@@ -135,6 +135,7 @@ def register(request):
                 new_user.password = password1  # 使用加密密码
                 new_user.tel = tel
                 new_user.sex= sex
+                new_user.uid = username
                 new_user.save()
                 return redirect('/bxxt/customer/login/')  # 自动跳转到登录页面
     register_form = RegisterForm()
