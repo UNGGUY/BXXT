@@ -5,7 +5,7 @@
 <html>
 
 <head>
-    <title>QACODE</title>
+    <title>QRCODE</title>
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
     <style>
         img {
@@ -62,8 +62,11 @@
         {% if latest_document_list and User %}
         <div style="text-align: center;">
             <div style="height: 70px;">
-                <h1>REIMBURSEMENT FORM<img style="float: right; height: 70px; width: auto;"
-                        src="/refundproof/qrcode/afb715ae61584abea32b35686cdf75e8.png"></h1>
+                <h1>REIMBURSEMENT FORM</h1><img style="float: right; height: 70px; width: auto;"
+                        src="{{MEDIA_URL}}QRcode/{{QRcode}}">
+                <h5>身份证：{{User.uid}}&nbsp;&nbsp;姓名：{{User.uname}}</h5>
+
+
             </div>
         </div>
         {% for document in latest_document_list %}
@@ -106,7 +109,7 @@
                     <td width="12.5%">
                         {{document.money}}
                     </td>
-                    <th width="12.5%"><a href="/bxxt/staff/r_details/{{document.rid}}">凭证数</a></th>
+                    <th width="12.5%"><a href="/bxxt/staff/r_details/{{document.r_id}}">凭证数</a></th>
                     <td width="7%">{{document.desum}}</td>
                 </tr>
                 <tr>
@@ -146,7 +149,8 @@
         </table>
 
         <div style="margin-top: 5%;margin-bottom: 5%;">
-            <a type="button" class="btn btn-primary" style="width: 20%;" href="/bxxt/staff/checksubmit">SUBMIT</a>
+            <a type="button" class="btn btn-primary" style="width: 20%;" href="/bxxt/staff/checksubmit/{{apply_id}}">SUBMIT</a>
+            <a type="button" class="btn btn-primary" style="width: 20%;" href="/bxxt/staff/check">BACK</a>
         </div>
         {% else %}
         <p>NO RECORDS ARE AVAILABLE.</p>

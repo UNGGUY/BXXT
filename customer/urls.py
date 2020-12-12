@@ -38,7 +38,13 @@ urlpatterns = [
     path('staff/login/',views.stafflogin,name='stafflogin'),
     path('staff/applys/',views.staffapplys,name='staffapplys'),
     path('staff/details/<int:apply_id>/',views.staffdetails,name='staffdetails'),
+    path('staff/check_hospital/', views.check_hospital,name='check_hospital'),
+    path('staff/audit_record/', views.audit_record, name='audit_record'),
+    path('staff/audit/', views.audit, name='audit'),
+
+    path('staff/scan_qr/', views.scan_qr, name='scan_qr'),
     path('staff/check/',views.staffcheck,name='staffcheck'),
+    path('staff/checksubmit/<int:apply_id>/',views.check_submit,name='check_submit'),
     path('staff/qrcode/',views.staffqrcode,name='staffqrcode'),
     path('staff/r_details/<int:record_id>/',views.staffrdetails,name='staffrdetails'),
 

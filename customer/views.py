@@ -3,13 +3,14 @@ from decimal import Decimal
 import os
 
 from MyQR import myqr
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_list_or_404
 from BXXT import settings
 from django.shortcuts import render, get_object_or_404
 from customer.models import User, Detail, Apply, Record
 from django.db.models import Q, Sum, Count
 import datetime
-
+from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 from customer import models
 from customer.myforms import UserForm, RegisterForm
@@ -239,8 +240,8 @@ def documents(request, apply_id):
     docstring
     """
     user = models.User.objects.get(uid=request.session['user_id'])
-    details = models.Detail.objects.filter(Q(rid__aid=apply_id) & Q(dstatus='1') & Q(type='1')).\
-        aggregate(sum=Sum('money'))
+    # details = models.Detail.objects.filter(Q(rid__aid=apply_id) & Q(dstatus='1') & Q(type='1')).\
+    #     aggregate(sum=Sum('money'))
     records = models.Record.objects.filter(aid=apply_id)
     latest_document_list = list()
     amount = 0
@@ -514,7 +515,7 @@ def staffapplys(request):
     docstring
     """
 
-    latest_apply_list = models.Apply.objects.filter(Q(astatus='1'))
+    latest_apply_list = models.Apply.objects.filter(Q(astatus='1') & Q(isDelete=False))
     context = {'latest_apply_list': latest_apply_list}
     return render(request, 'staff/applys.html', context)
 
@@ -525,12 +526,16 @@ def staffdetails(request,apply_id):
     """
     latest_record_list = models.Record.objects.filter(aid__id=apply_id)
 
-    latest_detail_list= list()
+    latest_details_list= list()
 
     for record in latest_record_list:
-        latest_detail_list.extend(models.Detail.objects.filter(rid__id=record.id)) # 是否还要筛选一下dstatus
-
-    context = {'latest_detail_list': latest_detail_list}
+        details = models.Detail.objects.filter(rid__id=record.id)
+        latest_details_list.append(details) # 是否还要筛选一下dstatus
+    print(latest_details_list)
+    context = {
+        'apply_id': apply_id,
+        'latest_details_list': latest_details_list
+    }
     return render(request,'staff/details.html',context)
 
 
@@ -574,6 +579,7 @@ def staffqrcode(request):
             money_inv['bx'] = 0
         document = {'aid': record.aid,
                     'rid': record.rid,
+                    'r_id': record.id,
                     'dtime': models.Detail.objects.filter(rid=record.id)[0].dtime,
                     'register': money_reg['sum'],
                     'invoice': money_inv['sum'],
@@ -589,10 +595,17 @@ def staffqrcode(request):
     context = {'latest_document_list': latest_document_list,
                'User': user,
                'amount': amount,
+               'apply_id': a_id,
+               'QRcode': models.Apply.objects.get(id=a_id).aid+'.png'
                }
 
     return render(request, 'staff/qrcode.html', context)
 
+
+def scan_qr(request):
+    # 扫描二维码所得结果为？uid= &aid=，将其续到url后
+    string = "?uid=12&aid=6"
+    return redirect("/bxxt/staff/qrcode/"+string)
 
 
 def staffrdetails(request,record_id):
@@ -600,8 +613,8 @@ def staffrdetails(request,record_id):
     docstring
     """
 
-    latest_detail_list=models.Detail.objects.filter(rid=record_id)
-
+    latest_detail_list=models.Detail.objects.filter(rid__id=record_id)
+    print(record_id)
     context={
         'latest_detail_list':latest_detail_list
     }
@@ -609,3 +622,62 @@ def staffrdetails(request,record_id):
     return render(request,'staff/r_details.html',context) 
 
 
+@csrf_exempt
+def check_hospital(request):
+    hname = request.POST.get('hname')
+    try:
+        h = models.Hospital.objects.get(hname=hname)
+        return HttpResponse("该单位在合作范围内！")
+    except:
+        return HttpResponse("该单位不在合作范围内！")
+
+
+def audit_record(request):
+    try:
+        r_id = request.GET.get('rid')
+        details = models.Detail.objects.filter(rid=r_id)
+        post = request.POST
+        for detail in details:
+            id = str(detail.id)
+            if post.get('moneybx'+id):
+                detail.money_bx = post.get('moneybx'+id)
+            detail.dstatus = post.get('dstatus'+id)
+            if detail.dstatus == "1":
+                detail.msg == "空"
+            else:
+                detail.msg = post.get('msg'+id)
+            if detail.rid.aid.astatus != '1':
+                return HttpResponse("status")
+            detail.save()
+        return HttpResponse()
+    except:
+        return HttpResponse("error")
+
+
+@csrf_exempt
+def audit(request):
+    a_id = request.GET.get('aid')
+    apply = models.Apply.objects.get(id=a_id)
+    apply.astatus = '2'
+    apply.save()
+    records = models.Record.objects.filter(aid__id=a_id)
+
+    # m_id = request.session['user_id'] # 获取审核人id
+    # auditer = models.Manager.objects.get(id=m_id) # 保存审核人
+    # auditer.count += 1
+    # auditer.right += 1
+    # auditer.save()
+    for record in records:
+        details = models.Detail.objects.filter(Q(rid__id=record.id) & Q(dstatus='1'))\
+            .aggregate(sum=Sum('money_bx'),money=Sum('money'))
+        record.money_bx = Decimal(details['sum']).quantize(Decimal('0.00'))
+        record.money = Decimal(details['money']).quantize(Decimal('0.00'))
+        record.save()
+    return HttpResponse('/bxxt/staff/applys/')
+
+
+def check_submit(request,apply_id):
+    apply = models.Apply.objects.get(id=apply_id)
+    apply.astatus='4'
+    apply.save()
+    return redirect('/bxxt/staff/check/')

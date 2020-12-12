@@ -226,6 +226,27 @@ class Audit(models.Model):
     mid = models.ForeignKey(Manager, on_delete=models.PROTECT, verbose_name=u"审核人")
     autime = models.DateTimeField('审核时间', auto_now_add=True)
 
+    def save(self):
+        models.Model.save(self, force_insert=False, force_update=False, using=None, update_fields=None)
+        auditer = Manager.objects.get(id=self.mid.id)
+        if self.austatus == '0':
+            auditer.right -= 1
+            auditer.save()
+            if self.aid.astatus == '2':
+                apply = Apply.objects.get(id=self.aid.id)
+                apply.astatus = '1'
+                apply.save()
+                details = Detail.objects.filter(rid__aid__id=self.aid.id)
+                for detail in details:
+                    detail.dstatus = '0'
+                    detail.msg = "空"
+                    detail.save()
+        else:
+            auditer.right += 1
+            auditer.count += 1
+            auditer.save()
+
+
     def __str__(self):
         return self.auid
 
@@ -233,9 +254,4 @@ class Audit(models.Model):
         db_table = "audit"
         verbose_name = '审核记录'
         verbose_name_plural = verbose_name
-
-
-
-
-
 

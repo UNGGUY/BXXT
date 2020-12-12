@@ -37,42 +37,107 @@
 
 
     <div class="container">
-        {% if latest_detail_list %}
-        {% for detail in latest_detail_list %}
-        <ul class="list-group list-group-flush">
+        <!--   每个记录号显示一个手风琴-->
+            {% if latest_details_list %}
+        <div id="records">
+            {% for obj in latest_details_list %}
+            <form id="form{{obj.first.rid.id}}" action="/bxxt/staff/apply_record/" method="post">
+                {% csrf_token %}
+                <div class="card bg-secondary" id="record{{obj.first.rid.id}}">
+                    <div class="card-header" >
+                        <a class="card-link text-white" style="width: 100%" data-toggle="collapse" href="#collapse{{obj.first.rid.id}}"
+                           id="switch{{obj.first.rid.id}}">
+                            记录编号：{{obj.first.rid.rid}}&nbsp;&nbsp;&nbsp;&nbsp;
+                            用户备注：
+                            {% if obj.first.rid.msg %}
+                                {{obj.first.rid.msg}}
+                            {% else %}
+                                空
+                            {% endif %}
+                        </a>
+                    </div>
+                    <div id="collapse{{obj.first.rid.id}}" class="collapse" data-parent="#records">
+                        <div class="card-body">
+                        {% for detail in obj %}
 
-            <li class="list-group-item list-group-item-primary">{{ detail.get_type_display }}</li>
-            <li class="list-group-item">Detail ID:{{detail.did}}</li>
-            <li class="list-group-item">Time:{{detail.dtime}}</li>
-            <li class="list-group-item">Hosptail Name:{{detail.hname}}</li>
-            <li class="list-group-item">Department Name:{{detail.sname}}</li>
-            <li class="list-group-item">Status:{{detail.get_dstatus_display}}</li>
-            <li class="list-group-item">Sum Money:{{detail.money}}</li>
-            <li class="list-group-item">Money:<input style="border: 0px;" type="text" name="money_bx"
-                    value="{{detail.money_bx}}"></li>
-            <li class="list-group-item">
-                {% if detail.msg == None %}
-                Message:无
-                {% else%}
-                Message:<input style="border: 0px;" type="text" name="message" value="{{detail.msg}}">
-                {% endif %}
-            </li>
-            <li class="list-group-item">
-                <div>
-                    <img src="{{ MEDIA_URL}}{{detail.folder}}" class="img-thumbnail" alt="detail image"
-                        style="max-width: 40%; height: auto;">
+                            <ul class="list-group list-group-flush">
+
+                                <li class="list-group-item list-group-item-primary">{{ detail.get_type_display }}</li>
+                                <li class="list-group-item">Detail ID:{{detail.did}}</li>
+                                <li class="list-group-item">Time:{{detail.dtime}}</li>
+                                <li class="list-group-item">
+                                    Hosptail Name:{{detail.hname}}
+                                    <a href="#" onclick="check_hospital('{{detail.hname}}')">检查是否属于合作医院</a>
+                                </li>
+                                <li class="list-group-item">Department Name:{{detail.sname}}</li>
+                                <li class="list-group-item">
+                                    <label for="sel{{detail.id}}">Status:</label>
+                                    <select class="inline_label"  id="sel{{detail.id}}" name="dstatus{{detail.id}}"
+                                            onchange="show_msg(this.value,'{{detail.id}}','{{obj.first.rid.id}}')">
+                                        {% if detail.dstatus == '0' %}
+                                            <option selected="selected" value="0">未审核</option>
+                                        {% else %}
+                                            <option value="0">未审核</option>
+                                        {% endif %}
+                                        {% if detail.dstatus == '1' %}
+                                            <option selected="selected" value="1">合格</option>
+                                        {% else %}
+                                            <option value="1">合格</option>
+                                        {% endif %}
+                                        {% if detail.dstatus == '-1' %}
+                                            <option selected="selected" value="-1">不合格</option>
+                                        {% else %}
+                                            <option value="-1">不合格</option>
+                                        {% endif %}
+
+                                    </select>
+                                </li>
+                                {% if detail.type == '1' or detail.type == '2' %}
+                                <li class="list-group-item">Sum Money:{{detail.money}}</li>
+                                <li class="list-group-item">
+                                    Money:&nbsp;<input  style="" type="number" step="0.01" name="money_bx{{detail.id}}"
+                                                        onchange="changeClass('{{obj.first.rid.id}}')"
+                                                        value="{{detail.money_bx}}"></li>
+                                {% endif %}
+                                <li class="list-group-item" style="display: none" id="msg{{detail.id}}">
+                                    {% if detail.msg == None %}
+                                    Message:<input  style="" type="text" name="msg{{detail.id}}" value="无"
+                                                    onchange="changeClass('{{obj.first.rid.id}}')">
+                                    {% else%}
+                                    Message:<input  style="" type="text" name="msg{{detail.id}}" value="{{detail.msg}}"
+                                                    onchange="changeClass('{{obj.first.rid.id}}')">
+                                    {% endif %}
+                                </li>
+                                <li class="list-group-item">
+                                    <div>
+                                        <img src="{{ MEDIA_URL}}{{detail.folder}}" class="img-thumbnail" alt="detail image"
+                                             style="max-width: 40%; height: auto;">
+                                    </div>
+                                </li>
+                            </ul>
+
+                        {%endfor%}
+                            <div>
+                                <button type="button"  class="btn btn-primary" id="btn{{obj.first.rid.id}}"
+                                        name="savebtn"
+                                        onclick="check_record('{{obj.first.rid.id}}')" >暂存</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </li>
-        </ul>
+            </form>
+            {% endfor %}
 
-        {% endfor %}
-
-        <div style="margin-top: 5%;margin-bottom: 5%;">
-            <button type="button" class="btn btn-primary" style="width: 20%;">SUBMIT</button>
         </div>
-        {% else%}
-        <p>{{a}}</p>
-        {% endif %}
+
+            <div style="margin-top: 5%;margin-bottom: 5%;">
+                <button type="button" class="btn btn-primary" style="width: 20%;" onclick="audit_finish()">SUBMIT</button>
+                <button type="button" class="btn btn-primary" style="width: 20%;" onclick="location='/bxxt/staff/applys/'"
+                id="backbtn">BACK</button>
+            </div>
+            {% else%}
+            <p>{{a}}</p>
+            {% endif %}
 
         <script src="{% static 'jquery/jquery-3.5.1.min.js' %}"></script>
         <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
@@ -82,3 +147,89 @@
 
 
 </html>
+<script>
+    function check_record(rid) {
+        console.log("1111111111")
+        var noerr=true;
+        $("#form"+rid).find('select').each(function () {// 检查每条状态是否审核过
+            if ($(this).val() == "0"){
+                alert("有项目未审核");
+                noerr = false;
+                return false;
+            }
+            else if ($(this).val() == "-1"){// 检查不合格的备注是否填写
+                var dom=$(this).parents("ul").find('input')
+                if(dom.length == 1 ){//转诊单
+                    if (dom[0].value=="空" || dom[0].value==""){
+                        alert("有理由未填写")
+                        noerr = false;
+                        return false;
+                    }
+                }
+                else if (dom[0].value=="") {//金额未填写
+                    alert("有金额未填写")
+                    noerr = false;
+                    return false;
+                }
+                else if(dom[1].value=="空" || dom[1].value==""){//有备注未写
+                    alert("有理由未填写")
+                    noerr = false;
+                    return false;
+                }
+            }
+        })
+        if(noerr){//提交form
+            $.post('/bxxt/staff/audit_record/?rid='+rid,$("#form"+rid).serialize(),function (rs) {
+
+                if(rs == "error") {
+                    alert("发生错误！")
+                    return
+                }else if(rs == "status"){
+                    alert("其余工作人员已审核或用户已撤销，请审核剩余申请！")
+                    $("#backbtn").click()
+                }else{
+                    // 修改card状态
+                    $("#record"+rid).removeClass('bg-secondary')
+                    $("#record"+rid).addClass('bg-success')
+                    // 关闭card
+                    $("#switch"+rid).click()
+                }
+            },'text')
+        }
+    }
+    function audit_finish() {
+        // 检查是否card-class
+        if($(".bg-secondary").length){
+            alert("还有未审核记录！")
+        }else{
+            $("button[name='savebtn']").click()
+            $.post(
+                '/bxxt/staff/audit/?aid={{apply_id}}',
+                function (rs) {
+                    location = rs
+                },'text'
+            )
+        }
+    }
+
+    function changeClass(rid) {
+        $("#record"+rid).removeClass('bg-success')
+        $("#record"+rid).addClass('bg-secondary')
+    }
+
+    function show_msg(obj, id, rid) {
+        $("#record"+rid).removeClass('bg-success')
+        $("#record"+rid).addClass('bg-secondary')
+        if(obj == '-1')
+            $("#msg"+id).show()
+        else
+            $("#msg"+id).hide()
+    }
+    function check_hospital(hname) {
+        $.post('/bxxt/staff/check_hospital/',{
+            hname: hname,
+        },function (rs) {
+            alert(rs)
+        },'text')
+    }
+</script>
