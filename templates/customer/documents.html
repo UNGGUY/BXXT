@@ -103,7 +103,7 @@
                 <th width="20%">合计金额:{{amount}}</th>
             </tr>
             <tr>
-                <th><small class="form-text text-muted">请及时前往线下报销，年份更新报销比例可能发生变化，以最新报销单为主！</small></th>
+                <th colspan="3"><small class="form-text text-muted">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* 请及时前往线下报销，年份更新报销比例可能发生变化，以最新报销单为主！</small></th>
             </tr>
             <tr>
                 <th>&nbsp;</th>
@@ -121,21 +121,22 @@
     {% else %}
     <p>NO RECORDS ARE AVAILABLE.</p>
     {% endif %}
-</div>
 <!--endprint-->
 
+    <div class="row" style="margin-top:4%  ">
+        <button type="button" class="col-2 btn-primary btn" style="height: 30%" onclick="my_print()">
+            打印
+        </button>
+        <strong class="col-3" style="text-align: end;">Please use the pc browser.</strong>
 
-<div class="alert alert-warning alert-dismissible fade show" role="alert">
-    <strong>Please use the pc browser.</strong>
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
+    </div>
+
+
 </div>
 
 
-<button type="button" class="btn-primary" onclick="my_print()">
-    打印
-</button>
+
+
 
 
 
