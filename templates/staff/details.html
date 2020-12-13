@@ -24,8 +24,8 @@
                 <ul class="navbar-nav mr-auto">
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    {% if request.session.is_login %}
-                    <li><a class="nav-link text-light">Online：{{ request.session.user_name }}</a> </li>
+                    {% if request.session.m_is_login %}
+                    <li><a class="nav-link text-light">Online：{{ request.session.manager_name }}</a> </li>
                     <li><a class="nav-link text-light" href="/bxxt/staff/logout/">Log out</a> </li>
                     {% else %}
                     <li><a class="nav-link text-light" href="/bxxt/staff/login/">Sign in</a> </li>
@@ -149,7 +149,6 @@
 </html>
 <script>
     function check_record(rid) {
-        console.log("1111111111")
         var noerr=true;
         $("#form"+rid).find('select').each(function () {// 检查每条状态是否审核过
             if ($(this).val() == "0"){
