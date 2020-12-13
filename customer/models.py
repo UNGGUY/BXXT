@@ -221,7 +221,7 @@ class Audit(models.Model):
         ('0', '撤销'),
     )
     aid = models.ForeignKey(Apply, on_delete=models.CASCADE, verbose_name=u"申请编号")
-    auid = models.CharField('审核编号', max_length=10)
+    auid = models.CharField('审核编号', max_length=15)
     austatus = models.CharField('状态', choices=choice, default='完成', max_length=20)
     mid = models.ForeignKey(Manager, on_delete=models.PROTECT, verbose_name=u"审核人")
     autime = models.DateTimeField('审核时间', auto_now_add=True)

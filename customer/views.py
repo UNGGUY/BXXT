@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_list_or_404
 from BXXT import settings
 from django.shortcuts import render, get_object_or_404
-from customer.models import User, Detail, Apply, Record
+from customer.models import User, Detail, Apply, Record, Audit
 from django.db.models import Q, Sum, Count
 import datetime
 from django.views.decorators.csrf import csrf_exempt
@@ -554,9 +554,9 @@ def staffqrcode(request):
     u_id=request.GET.get('uid')
     a_id=request.GET.get('aid')
     user = models.User.objects.get(id=u_id)
-    details = models.Detail.objects.filter(Q(rid__aid=a_id) & Q(dstatus='1') & Q(type='1')).\
-        aggregate(sum=Sum('money'))
-    print(details['sum'])
+    # details = models.Detail.objects.filter(Q(rid__aid=a_id) & Q(dstatus='1') & Q(type='1')).\
+    #     aggregate(sum=Sum('money'))
+    # print(details['sum'])
     records = models.Record.objects.filter(aid=a_id)
     latest_document_list = list()
     amount = 0
@@ -667,6 +667,19 @@ def audit(request):
     # auditer.count += 1
     # auditer.right += 1
     # auditer.save()
+    #
+    # # 生成审核记录 auid austatus autime aid mid
+    # audit = Audit(austatus='1', mid=auditer, aid=apply)
+    # # 生成auid 8位日期 4位审核人id 3位审核数id
+    # id_start = datetime.date.today().strftime('%Y%m%d') + str(m_id).zfill(4)
+    # audit_now = models.Audit.objects.filter(auid=id_start).order_by('-auid')
+    # if audit_now:
+    #     id_last = id_start + str(int(audit_now.first().rid[-3:]) + 1).zfill(3)
+    # else:
+    #     id_last = id_start + '001'
+    # audit.auid = id_last
+    # audit.save()
+
     for record in records:
         details = models.Detail.objects.filter(Q(rid__id=record.id) & Q(dstatus='1'))\
             .aggregate(sum=Sum('money_bx'),money=Sum('money'))
@@ -677,7 +690,12 @@ def audit(request):
 
 
 def check_submit(request,apply_id):
+    amount = request.GET.get('amount')
     apply = models.Apply.objects.get(id=apply_id)
     apply.astatus='4'
+    apply.isDelete = None
     apply.save()
+    # 修改用户金额
+    apply.uid.money += Decimal(amount).quantize(Decimal('0.00'))
+    apply.uid.save()
     return redirect('/bxxt/staff/check/')

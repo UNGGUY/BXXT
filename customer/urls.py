@@ -1,6 +1,7 @@
 from django.urls import path
 
 from . import views
+from decimal import Decimal
 
 urlpatterns = [
     path('', views.index, name='index'),
