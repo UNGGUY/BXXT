@@ -11,7 +11,7 @@
 
 <body>
     <div class="container" style="width: 20%;">
-        <form class='form-login' action="/bxxt/customer/login/" method="post">
+        <form class='form-login' action="/bxxt/staff/login/" method="post">
 
 
             {% if message %}
@@ -23,12 +23,12 @@
 
 
             <div class="form-group">
-                {{ login_form.username.label_tag }}
-                {{ login_form.username}}
+                {{ staff_form.mname.label_tag }}
+                {{ staff_form.mname}}
             </div>
             <div class="form-group">
-                {{ login_form.password.label_tag }}
-                {{ login_form.password }}
+                {{ staff_form.password.label_tag }}
+                {{ staff_form.password }}
             </div>
 
             <div align="center">

@@ -1,13 +1,13 @@
 
 from django import forms
 
-
+#用户表单
 class UserForm(forms.Form):
     username= forms.CharField(label = "USERNAME", max_length=128, widget=forms.TextInput(attrs={'class': 'form-control'}))
     password = forms.CharField(label="PASSWORD", max_length=256, widget=forms.PasswordInput(attrs={'class': 'form-control'}))
 
 
-
+#注册表单
 class RegisterForm(forms.Form):
     gender = (
         ('male', "男"),
@@ -23,7 +23,10 @@ class RegisterForm(forms.Form):
 
     sex = forms.ChoiceField(label='GENDER', choices=gender)
 
-
+#员工表单
+class StaffForm(forms.Form):
+    mname= forms.CharField(label = "MANAGER NAME", max_length=128, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    password = forms.CharField(label="PASSWORD", max_length=256, widget=forms.PasswordInput(attrs={'class': 'form-control'}))
 
 
 #

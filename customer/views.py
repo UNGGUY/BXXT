@@ -13,7 +13,7 @@ import datetime
 from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 from customer import models
-from customer.myforms import UserForm, RegisterForm
+from customer.myforms import UserForm, RegisterForm, StaffForm
 
 
 def index(request):
@@ -26,7 +26,6 @@ def index(request):
 # 登录模块
 def login(request):
     if request.session.get('is_login', None):
-        print(2)
         return redirect('/bxxt/customer/')
 
     if request.method == "POST":
@@ -43,7 +42,7 @@ def login(request):
             password = login_form.cleaned_data['password']
             try:
                 user = models.User.objects.get(Q(uid=username) | Q(tel=username))
-               # user = models.User.objects.get(Q(uid=username) | Q(tel=username) | Q(uname=username))
+                # user = models.User.objects.get(Q(uid=username) | Q(tel=username) | Q(uname=username))
                 if user.password == password:
                     request.session['is_login'] = True
                     request.session['user_id'] = user.uid
@@ -86,7 +85,6 @@ def account(request):
         user.address = province
         user.save()
 
-
     return render(request, 'customer/account.html', context)
 
 
@@ -101,7 +99,7 @@ def account_update(request):
         user.address = address
     user.save()
     context = {'User': user}
-    return render(request, "customer/account.html",context)
+    return render(request, "customer/account.html", context)
 
 
 # 注册模块
@@ -127,15 +125,13 @@ def register(request):
                     message = '用户已经存在，请重新选择用户名！'
                     return render(request, 'customer/register.html', locals())
 
-
-
                 # 当一切都OK的情况下，创建新用户
 
                 new_user = models.User.objects.create()
                 new_user.uname = username
                 new_user.password = password1  # 使用加密密码
                 new_user.tel = tel
-                new_user.sex= sex
+                new_user.sex = sex
                 new_user.uid = username
                 new_user.save()
                 return redirect('/bxxt/customer/login/')  # 自动跳转到登录页面
@@ -202,7 +198,7 @@ def records_delete(request, record_id):
         os.remove(os.path.join(settings.MEDIA_ROOT, str(detail.folder)))
     aid = record.aid.id
     record.delete()
-    return redirect('/bxxt/customer/records/'+str(aid))
+    return redirect('/bxxt/customer/records/' + str(aid))
 
 
 def details(request, record_id):
@@ -250,7 +246,7 @@ def documents(request, apply_id):
             aggregate(sum=Sum('money'), bx=Sum('money_bx'))
         money_inv = models.Detail.objects.filter(Q(rid=record.id) & Q(dstatus='1') & Q(type='2')). \
             aggregate(sum=Sum('money'), bx=Sum('money_bx'))
-        desum = models.Detail.objects.filter(Q(rid=record.id) & Q(dstatus='1')). count()
+        desum = models.Detail.objects.filter(Q(rid=record.id) & Q(dstatus='1')).count()
         ratio = user.utype.ratio
         if user.money >= user.utype.limit:
             ratio += user.utype.change
@@ -267,23 +263,24 @@ def documents(request, apply_id):
                     'dtime': models.Detail.objects.filter(rid=record.id)[0].dtime,
                     'register': money_reg['sum'],
                     'invoice': money_inv['sum'],
-                    'cost': money_reg['sum']+money_inv['sum'],
-                    'money': money_reg['bx']+money_inv['bx'],
-                    'ratio': str(ratio)+"%",
-                    'money_bx': Decimal((money_reg['bx']+money_inv['bx'])*ratio/100).quantize(Decimal('0.00')),
+                    'cost': money_reg['sum'] + money_inv['sum'],
+                    'money': money_reg['bx'] + money_inv['bx'],
+                    'ratio': str(ratio) + "%",
+                    'money_bx': Decimal((money_reg['bx'] + money_inv['bx']) * ratio / 100).quantize(Decimal('0.00')),
                     'desum': desum
                     }
         latest_document_list.append(document)
-        amount +=Decimal((money_reg['bx']+money_inv['bx'])*ratio/100).quantize(Decimal('0.00'))
+        amount += Decimal((money_reg['bx'] + money_inv['bx']) * ratio / 100).quantize(Decimal('0.00'))
     apply = models.Apply.objects.get(id=apply_id)
-    if not os.path.exists('media/QRcode/'+apply.aid+'.png'):
+    if not os.path.exists('media/QRcode/' + apply.aid + '.png'):
         # words传递参数，扫描二维码后获取并添加至url后
-        myqr.run(words='uid='+str(user.id)+'&aid='+str(apply_id), save_name=apply.aid+'.png', save_dir='media/QRcode/')
+        myqr.run(words='uid=' + str(user.id) + '&aid=' + str(apply_id), save_name=apply.aid + '.png',
+                 save_dir='media/QRcode/')
     context = {'latest_document_list': latest_document_list,
-                'User': user,
-                'amount': amount,
-                'QRcode': apply.aid+'.png'
-                }
+               'User': user,
+               'amount': amount,
+               'QRcode': apply.aid + '.png'
+               }
 
     return render(request, 'customer/documents.html', context)
 
@@ -332,9 +329,9 @@ def detail_edit(request, detail_id):
     detail_rs = models.Detail.objects.get(id=detail_id)
     detail_rs.dtime = detail_rs.dtime.strftime("%Y-%m-%d")
     context = {
-        'detail':detail_rs,
+        'detail': detail_rs,
     }
-    return render(request,'customer/edit.html',context)
+    return render(request, 'customer/edit.html', context)
 
 
 def detail_update(request, detail_id):
@@ -343,7 +340,7 @@ def detail_update(request, detail_id):
     detail = models.Detail.objects.get(id=detail_id)
     if file:
         # 换名字 报销编号—凭证编号—类型名.后缀
-        file.name =detail.rid.rid+"_"+detail.did+"_"+detail.get_type_display()+os.path.splitext(file.name)[1]
+        file.name = detail.rid.rid + "_" + detail.did + "_" + detail.get_type_display() + os.path.splitext(file.name)[1]
         #  删除原来的文件
         os.remove(os.path.join(settings.MEDIA_ROOT, str(detail.folder)))
         # 保存新文件
@@ -369,7 +366,7 @@ def detail_update(request, detail_id):
         'detail': detail
     }
 
-    return redirect('/bxxt/customer/detail/'+str(detail_id))
+    return redirect('/bxxt/customer/detail/' + str(detail_id))
 
 
 def detail_delete(request, detail_id):
@@ -380,7 +377,7 @@ def detail_delete(request, detail_id):
     os.remove(os.path.join(settings.MEDIA_ROOT, str(detail.folder)))
     rid = detail.rid_id
     detail.delete()
-    return redirect('/bxxt/customer/details/'+str(rid))
+    return redirect('/bxxt/customer/details/' + str(rid))
 
 
 def addrecord(request, apply_id):
@@ -390,7 +387,7 @@ def addrecord(request, apply_id):
     context = {
         'apply_id': apply_id
     }
-    return render(request,'customer/addrecord.html', context)
+    return render(request, 'customer/addrecord.html', context)
 
 
 def records_insert(request, apply_id):
@@ -417,7 +414,7 @@ def records_insert(request, apply_id):
             tr_detail.money_bx = 0
             tr_detail.type = '0'
             # 换名字 报销编号—凭证编号—类型名.后缀
-            tr_file.name = rid+"_"+tr_detail.did+"_"+'转诊单'+os.path.splitext(tr_file.name)[1]
+            tr_file.name = rid + "_" + tr_detail.did + "_" + '转诊单' + os.path.splitext(tr_file.name)[1]
             # 保存新文件
             tr_detail.folder = tr_file
         if re_file:
@@ -465,7 +462,7 @@ def records_insert(request, apply_id):
         if in_detail.did:
             in_detail.rid = rid_id
             in_detail.save()
-    return redirect("/bxxt/customer/records/"+str(apply_id))
+    return redirect("/bxxt/customer/records/" + str(apply_id))
 
 
 def make_rid(uid):
@@ -499,15 +496,50 @@ def applys_new(request):
     return records_insert(request, apply.id)
 
 
-
-
 # STAFF
 
 def stafflogin(request):
     """
     docstring
     """
-    return render(request,'staff/login.html')
+
+    if request.session.get('m_is_login', None):
+        return redirect('/bxxt/staff/check')
+
+    if request.method == "POST":
+        staff_form = StaffForm(request.POST)
+        message = "所有字段都必须填写！"
+
+        #方式：通过表单获取员工名和密码
+        if staff_form.is_valid():
+            mname = staff_form.cleaned_data['mname']
+            password = staff_form.cleaned_data['password']
+
+            try:
+                manager = models.Manager.objects.get(Q(mid=mname) | Q(mname=mname))
+                # user = models.User.objects.get(Q(uid=username) | Q(tel=username) | Q(uname=username))
+                if manager.pw == password:
+                    print(mname)
+                    print(password)
+                    request.session['m_is_login'] = True
+                    request.session['manager_id'] = manager.mid
+                    request.session['manager_name'] = manager.mname
+                    request.session['manager_type'] = manager.type
+
+                    if manager.type == '1' | manager.type == '2':
+                        return redirect('/bxxt/staff/applys')
+                    if manager.type == '3':
+                        return redirect('/bxxt/staff/check')
+
+                else:
+                    message = "密码不正确！"
+            except:
+                message = "用户不存在"
+
+        return render(request, 'staff/login.html', locals())
+    staff_form = StaffForm()
+
+    return render(request, 'staff/login.html', locals())
 
 
 def staffapplys(request):
@@ -520,39 +552,38 @@ def staffapplys(request):
     return render(request, 'staff/applys.html', context)
 
 
-def staffdetails(request,apply_id):
+def staffdetails(request, apply_id):
     """
     docstring
     """
     latest_record_list = models.Record.objects.filter(aid__id=apply_id)
 
-    latest_details_list= list()
+    latest_details_list = list()
 
     for record in latest_record_list:
         details = models.Detail.objects.filter(rid__id=record.id)
-        latest_details_list.append(details) # 是否还要筛选一下dstatus
+        latest_details_list.append(details)  # 是否还要筛选一下dstatus
     print(latest_details_list)
     context = {
         'apply_id': apply_id,
         'latest_details_list': latest_details_list
     }
-    return render(request,'staff/details.html',context)
+    return render(request, 'staff/details.html', context)
 
 
 def staffcheck(request):
     """
     docstring
     """
-    return render(request,'staff/check.html')
-
+    return render(request, 'staff/check.html')
 
 
 def staffqrcode(request):
     """
     docstring
     """
-    u_id=request.GET.get('uid')
-    a_id=request.GET.get('aid')
+    u_id = request.GET.get('uid')
+    a_id = request.GET.get('aid')
     user = models.User.objects.get(id=u_id)
     # details = models.Detail.objects.filter(Q(rid__aid=a_id) & Q(dstatus='1') & Q(type='1')).\
     #     aggregate(sum=Sum('money'))
@@ -565,7 +596,7 @@ def staffqrcode(request):
             aggregate(sum=Sum('money'), bx=Sum('money_bx'))
         money_inv = models.Detail.objects.filter(Q(rid=record.id) & Q(dstatus='1') & Q(type='2')). \
             aggregate(sum=Sum('money'), bx=Sum('money_bx'))
-        desum = models.Detail.objects.filter(Q(rid=record.id) & Q(dstatus='1')). count()
+        desum = models.Detail.objects.filter(Q(rid=record.id) & Q(dstatus='1')).count()
         ratio = user.utype.ratio
         if user.money >= user.utype.limit:
             ratio += user.utype.change
@@ -583,20 +614,20 @@ def staffqrcode(request):
                     'dtime': models.Detail.objects.filter(rid=record.id)[0].dtime,
                     'register': money_reg['sum'],
                     'invoice': money_inv['sum'],
-                    'cost': money_reg['sum']+money_inv['sum'],
-                    'money': money_reg['bx']+money_inv['bx'],
-                    'ratio': str(ratio)+"%",
-                    'money_bx': Decimal((money_reg['bx']+money_inv['bx'])*ratio/100).quantize(Decimal('0.00')),
+                    'cost': money_reg['sum'] + money_inv['sum'],
+                    'money': money_reg['bx'] + money_inv['bx'],
+                    'ratio': str(ratio) + "%",
+                    'money_bx': Decimal((money_reg['bx'] + money_inv['bx']) * ratio / 100).quantize(Decimal('0.00')),
                     'desum': desum
                     }
         latest_document_list.append(document)
-        amount +=Decimal((money_reg['bx']+money_inv['bx'])*ratio/100).quantize(Decimal('0.00'))
+        amount += Decimal((money_reg['bx'] + money_inv['bx']) * ratio / 100).quantize(Decimal('0.00'))
 
     context = {'latest_document_list': latest_document_list,
                'User': user,
                'amount': amount,
                'apply_id': a_id,
-               'QRcode': models.Apply.objects.get(id=a_id).aid+'.png'
+               'QRcode': models.Apply.objects.get(id=a_id).aid + '.png'
                }
 
     return render(request, 'staff/qrcode.html', context)
@@ -605,21 +636,21 @@ def staffqrcode(request):
 def scan_qr(request):
     # 扫描二维码所得结果为？uid= &aid=，将其续到url后
     string = "?uid=12&aid=6"
-    return redirect("/bxxt/staff/qrcode/"+string)
+    return redirect("/bxxt/staff/qrcode/" + string)
 
 
-def staffrdetails(request,record_id):
+def staffrdetails(request, record_id):
     """
     docstring
     """
 
-    latest_detail_list=models.Detail.objects.filter(rid__id=record_id)
+    latest_detail_list = models.Detail.objects.filter(rid__id=record_id)
     print(record_id)
-    context={
-        'latest_detail_list':latest_detail_list
+    context = {
+        'latest_detail_list': latest_detail_list
     }
 
-    return render(request,'staff/r_details.html',context) 
+    return render(request, 'staff/r_details.html', context)
 
 
 @csrf_exempt
@@ -639,13 +670,13 @@ def audit_record(request):
         post = request.POST
         for detail in details:
             id = str(detail.id)
-            if post.get('moneybx'+id):
-                detail.money_bx = post.get('moneybx'+id)
-            detail.dstatus = post.get('dstatus'+id)
+            if post.get('moneybx' + id):
+                detail.money_bx = post.get('moneybx' + id)
+            detail.dstatus = post.get('dstatus' + id)
             if detail.dstatus == "1":
                 detail.msg == "空"
             else:
-                detail.msg = post.get('msg'+id)
+                detail.msg = post.get('msg' + id)
             if detail.rid.aid.astatus != '1':
                 return HttpResponse("status")
             detail.save()
@@ -681,18 +712,18 @@ def audit(request):
     # audit.save()
 
     for record in records:
-        details = models.Detail.objects.filter(Q(rid__id=record.id) & Q(dstatus='1'))\
-            .aggregate(sum=Sum('money_bx'),money=Sum('money'))
+        details = models.Detail.objects.filter(Q(rid__id=record.id) & Q(dstatus='1')) \
+            .aggregate(sum=Sum('money_bx'), money=Sum('money'))
         record.money_bx = Decimal(details['sum']).quantize(Decimal('0.00'))
         record.money = Decimal(details['money']).quantize(Decimal('0.00'))
         record.save()
     return HttpResponse('/bxxt/staff/applys/')
 
 
-def check_submit(request,apply_id):
+def check_submit(request, apply_id):
     amount = request.GET.get('amount')
     apply = models.Apply.objects.get(id=apply_id)
-    apply.astatus='4'
+    apply.astatus = '4'
     apply.isDelete = None
     apply.save()
     # 修改用户金额
