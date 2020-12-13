@@ -515,7 +515,7 @@ def stafflogin(request):
             mname = staff_form.cleaned_data['mname']
             password = staff_form.cleaned_data['password']
             try:
-                manager = models.Manager.objects.get(Q(mid=mname) | Q(mname=mname))
+                manager = models.Manager.objects.get(mid=mname)
                 print(manager)
                 # user = models.User.objects.get(Q(uid=username) | Q(tel=username) | Q(uname=username))
                 if manager.pw == password:
@@ -691,23 +691,23 @@ def audit(request):
     apply.save()
     records = models.Record.objects.filter(aid__id=a_id)
 
-    # m_id = request.session['user_id'] # 获取审核人id
-    # auditer = models.Manager.objects.get(id=m_id) # 保存审核人
-    # auditer.count += 1
-    # auditer.right += 1
-    # auditer.save()
-    #
-    # # 生成审核记录 auid austatus autime aid mid
-    # audit = Audit(austatus='1', mid=auditer, aid=apply)
-    # # 生成auid 8位日期 4位审核人id 3位审核数id
-    # id_start = datetime.date.today().strftime('%Y%m%d') + str(m_id).zfill(4)
-    # audit_now = models.Audit.objects.filter(auid=id_start).order_by('-auid')
-    # if audit_now:
-    #     id_last = id_start + str(int(audit_now.first().rid[-3:]) + 1).zfill(3)
-    # else:
-    #     id_last = id_start + '001'
-    # audit.auid = id_last
-    # audit.save()
+    m_id = request.session['manager_id'] # 获取审核人id
+    auditer = models.Manager.objects.get(id=m_id) # 保存审核人
+    auditer.count += 1
+    auditer.right += 1
+    auditer.save()
+
+    # 生成审核记录 auid austatus autime aid mid
+    audit = Audit(austatus='1', mid=auditer, aid=apply)
+    # 生成auid 8位日期 4位审核人id 3位审核数id
+    id_start = datetime.date.today().strftime('%Y%m%d') + str(m_id).zfill(4)
+    audit_now = models.Audit.objects.filter(auid=id_start).order_by('-auid')
+    if audit_now:
+        id_last = id_start + str(int(audit_now.first().rid[-3:]) + 1).zfill(3)
+    else:
+        id_last = id_start + '001'
+    audit.auid = id_last
+    audit.save()
 
     for record in records:
         details = models.Detail.objects.filter(Q(rid__id=record.id) & Q(dstatus='1')) \
