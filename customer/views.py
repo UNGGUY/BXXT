@@ -728,3 +728,18 @@ def check_submit(request, apply_id):
     apply.uid.money += Decimal(amount).quantize(Decimal('0.00'))
     apply.uid.save()
     return redirect('/bxxt/staff/check/')
+
+
+
+def staffaccount(request):
+    """
+    docstring
+    """
+
+    manager=models.Manager.objects.get(mid=request.session['user_id'])
+
+    context={
+        'Manager':manager,
+    }
+
+    return render(request, 'staff/account.html', context)

@@ -1,0 +1,41 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>APPLYS</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+</head>
+
+<body>
+    <div class="container" style="max-width: 50%; margin-top: 3%;">
+        <form method="post" action="/bxxt/customer/account/update/" >
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="managername">Manager NAME</label>
+                <input type="text" class="form-control" name="mname" id="managername" value="{{ Manager.mname }}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="managerid">Manager ID</label>
+                <input type="text" class="form-control" name="mid" id="managerid" value="{{Manager.uid}}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="managerage">Manager PASSWORD</label>
+                <input type="datetime" class="form-control" name="password" id="managerpassword" value="{{Manager.pass}}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="sex">IDENTITY</label>
+                <input type="text" class="form-control" id="manageridentity" name="identity" value="{{Manager.get_type_display}}" readonly>
+            </div>
+        </form>
+    </div>
+    
+    <script src="{% static 'jquery/jquery-3.5.1.min.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+</body>
+
+
+
+</html>
