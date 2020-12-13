@@ -542,6 +542,19 @@ def stafflogin(request):
     return render(request, 'staff/login.html', locals())
 
 
+# 登出模块
+def stafflogout(request):
+    if not request.session.get('m_is_login', None):
+        # 如果本来就没有登录，自然也就没有登出的说法
+        return redirect("/bxxt/staff/login")
+    # 清空session
+    request.session.flush()
+    request.session['m_is_login'] = False
+
+    return redirect('/bxxt/staff/login')
+
+
+
 def staffapplys(request):
     """
     docstring

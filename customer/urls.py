@@ -48,6 +48,7 @@ urlpatterns = [
     path('staff/checksubmit/<int:apply_id>/',views.check_submit,name='check_submit'),
     path('staff/qrcode/',views.staffqrcode,name='staffqrcode'),
     path('staff/r_details/<int:record_id>/',views.staffrdetails,name='staffrdetails'),
+    path('staff/logout/',views.stafflogout,name='stafflogout')
 
 
 ]
