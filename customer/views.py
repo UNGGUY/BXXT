@@ -497,7 +497,7 @@ def applys_new(request):
 
 
 # STAFF
-
+@csrf_exempt
 def stafflogin(request):
     """
     docstring
@@ -514,19 +514,17 @@ def stafflogin(request):
         if staff_form.is_valid():
             mname = staff_form.cleaned_data['mname']
             password = staff_form.cleaned_data['password']
-
             try:
                 manager = models.Manager.objects.get(Q(mid=mname) | Q(mname=mname))
+                print(manager)
                 # user = models.User.objects.get(Q(uid=username) | Q(tel=username) | Q(uname=username))
                 if manager.pw == password:
-                    print(mname)
-                    print(password)
                     request.session['m_is_login'] = True
-                    request.session['manager_id'] = manager.mid
+                    request.session['manager_id'] = manager.id
                     request.session['manager_name'] = manager.mname
                     request.session['manager_type'] = manager.type
 
-                    if manager.type == '1' | manager.type == '2':
+                    if manager.type == '2':
                         return redirect('/bxxt/staff/applys')
                     if manager.type == '3':
                         return redirect('/bxxt/staff/check')
