@@ -49,5 +49,7 @@ urlpatterns = [
     path('staff/qrcode/',views.staffqrcode,name='staffqrcode'),
     path('staff/r_details/<int:record_id>/',views.staffrdetails,name='staffrdetails'),
     path('staff/accuout',views.staffaccount,name='staffaccount'),
+    path('staff/logout/',views.stafflogout,name='stafflogout')
+
 
 ]
