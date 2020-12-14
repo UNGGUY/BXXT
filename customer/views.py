@@ -497,14 +497,16 @@ def applys_new(request):
 
 
 # STAFF
+def staff(request):
+    staff_form = StaffForm()
+    return render(request, 'staff/login.html',locals())
+
+
 @csrf_exempt
 def stafflogin(request):
     """
     docstring
     """
-
-    if request.session.get('m_is_login', None):
-        return redirect('/bxxt/staff/check')
 
     if request.method == "POST":
         staff_form = StaffForm(request.POST)
@@ -544,12 +546,12 @@ def stafflogin(request):
 def stafflogout(request):
     if not request.session.get('m_is_login', None):
         # 如果本来就没有登录，自然也就没有登出的说法
-        return redirect("/bxxt/staff/login")
+        return redirect("/bxxt/staff")
     # 清空session
     request.session.flush()
     request.session['m_is_login'] = False
 
-    return redirect('/bxxt/staff/login')
+    return redirect('/bxxt/staff')
 
 
 
@@ -557,7 +559,10 @@ def staffapplys(request):
     """
     docstring
     """
-
+    if not request.session.get('m_is_login'):
+        return redirect('/bxxt/staff')
+    if request.session.get('manager_type') == '3':
+        return redirect('/bxxt/staff/check/')
     latest_apply_list = models.Apply.objects.filter(Q(astatus='1') & Q(isDelete=False))
     context = {'latest_apply_list': latest_apply_list}
     return render(request, 'staff/applys.html', context)
@@ -586,6 +591,10 @@ def staffcheck(request):
     """
     docstring
     """
+    if not request.session.get('m_is_login'):
+        return redirect('/bxxt/staff/')
+    if request.session.get('manager_type') == '2':
+        return redirect('/bxxt/staff/applys/')
     return render(request, 'staff/check.html')
 
 

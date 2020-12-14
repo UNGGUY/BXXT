@@ -36,6 +36,7 @@ urlpatterns = [
 
 
     # STAFF
+    path('staff/',views.staff,name='staff'),
     path('staff/login/',views.stafflogin,name='stafflogin'),
     path('staff/applys/',views.staffapplys,name='staffapplys'),
     path('staff/details/<int:apply_id>/',views.staffdetails,name='staffdetails'),

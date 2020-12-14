@@ -24,8 +24,8 @@
                 <ul class="navbar-nav mr-auto">
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    {% if request.session.is_login %}
-                    <li><a class="nav-link text-light">Online：{{ request.session.user_name }}</a> </li>
+                    {% if request.session.m_is_login %}
+                    <li><a class="nav-link text-light">Online：{{ request.session.manager_name }}</a> </li>
                     <li><a class="nav-link text-light" href="/bxxt/staff/logout/">Log out</a> </li>
                     {% else %}
                     <li><a class="nav-link text-light" href="/bxxt/staff/login/">Sign in</a> </li>
@@ -34,6 +34,7 @@
             </div>
         </div>
     </nav>
+
 
 
     <div class="container">
